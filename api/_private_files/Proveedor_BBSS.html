@@ -930,19 +930,22 @@ const policyDocs=[
     title:'Código de Conducta de Dynacor',
     sub:'Normas de conducta y ética empresarial para proveedores',
     icon:'fa-book-open', iconBg:'#dcfce7', iconColor:'#16a34a',
-    url:null, isPdf:false, comingSoon:false, pending:true
+    url:'/assets/CODIGO_CONDUCTA_DYNACOR.pdf',
+    isPdf:true, comingSoon:false
   },
   {
     title:'Política de Derechos Humanos',
     sub:'Compromisos con los derechos fundamentales de las personas',
     icon:'fa-handshake', iconBg:'#ede9fe', iconColor:'#7c3aed',
-    url:null, isPdf:false, comingSoon:false, pending:true
+    url:'/assets/POLITICA_DERECHOS_HUMANOS_MVD.pdf',
+    isPdf:true, comingSoon:false
   },
   {
     title:'Política Anticorrupción',
-    sub:'Próximamente disponible en la plataforma',
+    sub:'Lineamientos anticorrupción para proveedores',
     icon:'fa-scale-balanced', iconBg:'#f1f5f9', iconColor:'#94a3b8',
-    url:null, isPdf:false, comingSoon:true
+    url:'/assets/POLITICA_ANTICORRUPCION_MVD.pdf',
+    isPdf:true, comingSoon:false
   }
 ];
 let polStep=0;
@@ -985,10 +988,10 @@ async function lookupRegistrationDocument(){
         nameEl.value=String(value).trim().toUpperCase();
         setRegLookupHint('');
       }else{
-        setRegLookupHint(isRuc?'No se pudo obtener la razon social. Puede escribirla manualmente.':'No se pudo obtener el nombre. Puede escribirlo manualmente.','warn');
+        setRegLookupHint('RUC o documento no encontrado','err');
       }
     }catch(e){
-      setRegLookupHint('No se pudo consultar el API. Puede completar el nombre manualmente.','err');
+      setRegLookupHint('RUC o documento no encontrado','err');
     }
   },450);
 }
@@ -1047,6 +1050,25 @@ function initDjRucLookup(){
   if(!rucEl)return;
   rucEl.addEventListener('input',()=>lookupDjRuc(false));
   rucEl.addEventListener('blur',()=>lookupDjRuc(true));
+}
+
+function inferDocumentType(numero){
+  const clean=String(numero||'').replace(/\D/g,'');
+  if(clean.length===11&&(clean.startsWith('1')||clean.startsWith('2'))) return 'RUC';
+  if(clean.length===8) return 'DNI';
+  return '';
+}
+
+function prepareConsentProviderData(){
+  const nameEl=document.getElementById('consName');
+  const tipoEl=document.getElementById('consTipo');
+  const docEl=document.getElementById('consDoc');
+  const numero=(providerRuc||document.getElementById('regRuc')?.value||document.getElementById('loginRuc')?.value||'').trim();
+  const name=(providerName||getProviderName()||('PROVEEDOR '+numero)).trim();
+  const tipo=inferDocumentType(numero);
+  if(nameEl) nameEl.value=name;
+  if(docEl) docEl.value=numero;
+  if(tipoEl&&tipo) tipoEl.value=tipo;
 }
 
 function createAccount(){
@@ -1239,6 +1261,8 @@ const roleIconColors=['#dc2626','#92400e','#1d4ed8','#166534'];
 
 function renderDocList(){
   const box=document.getElementById('docRows');if(!box)return;
+  const title=document.getElementById('docsTitle');
+  if(title)title.textContent='Registro de Documentos de: '+(providerName||'PROVEEDOR '+(providerRuc||'000000000001'));
   /* actualizar subtítulo con tipo de proveedor */
   const sub=document.getElementById('docsSubtitle');
   if(sub)sub.innerHTML=`${providerTypeLabel()} &nbsp;·&nbsp; RUC: ${providerRuc||'000000000001'} &nbsp;·&nbsp; Cargue cada documento requerido para completar su registro.`;
@@ -1865,7 +1889,7 @@ function openModal(id){
   if(id==='modalDJ') prepareDjProviderData();
   if(id==='modalConsent'){
     document.getElementById('consDate').value=todayIso();
-    loadConsentLocal();
+    prepareConsentProviderData();
     setTimeout(updateConsentPreview,50);
   }
 }

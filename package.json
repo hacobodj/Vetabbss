@@ -9,5 +9,8 @@
   "scripts": {
     "dev": "vercel dev",
     "start": "vercel dev"
+  },
+  "dependencies": {
+    "playwright": "^1.61.0"
   }
 }

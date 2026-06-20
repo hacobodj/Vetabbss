@@ -104,12 +104,15 @@ function parseRepresentantes(html) {
   }
 
   // Seleccionar mejor Representante Legal:
-  // 1. Preferir cargo "GERENTE GENERAL"
-  // 2. Si hay varios, tomar el de fecha más reciente
-  // 3. Fallback: primer representante de la lista
-  const gerentesGenerales = rows.filter(r =>
-    r.cargo.toUpperCase().includes('GERENTE GENERAL')
-  );
+  // Prioridad: GERENTE GENERAL > TITULAR-GERENTE > DIRECTOR GERENTE > GERENTE > cualquier otro
+  // Si hay varios del mismo tipo, tomar el de fecha más reciente
+  const PRIORIDAD = ['GERENTE GENERAL','TITULAR GERENTE','TITULAR-GERENTE','DIRECTOR GERENTE','GERENTE'];
+  let gerentesGenerales = [];
+  for (const cargo of PRIORIDAD) {
+    const found = rows.filter(r => r.cargo.toUpperCase().includes(cargo));
+    if (found.length > 0) { gerentesGenerales = found; break; }
+  }
+  if (!gerentesGenerales.length) gerentesGenerales = rows; // último fallback: todos
 
   let representanteLegal = null;
   if (gerentesGenerales.length > 0) {
@@ -122,13 +125,29 @@ function parseRepresentantes(html) {
   return { representantes: rows, representanteLegal };
 }
 
+/* ── Lanzador de navegador: local (playwright) o serverless (@sparticuz/chromium) ── */
+async function launchBrowser() {
+  // Intentar primero con @sparticuz/chromium (compatible con Vercel/Lambda)
+  try {
+    const chromiumPkg = require('@sparticuz/chromium');
+    const { chromium: pwCore } = require('playwright-core');
+    return await pwCore.launch({
+      args: chromiumPkg.args,
+      executablePath: await chromiumPkg.executablePath(),
+      headless: chromiumPkg.headless,
+    });
+  } catch (_) {
+    // Fallback: playwright completo (entorno local / vercel dev)
+    const { chromium } = require('playwright');
+    return await chromium.launch({ headless: true });
+  }
+}
+
 /* ── Scraper principal ── */
 async function scrapeSunatRuc(numero) {
   let browser = null;
   try {
-    const { chromium } = require('playwright');
-
-    browser = await chromium.launch({ headless: true });
+    browser = await launchBrowser();
     const ctx = await browser.newContext({
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
       locale: 'es-PE',

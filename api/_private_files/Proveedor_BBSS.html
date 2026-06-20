@@ -949,6 +949,8 @@ let polStep=0;
 
 let regLookupTimer=null;
 let regLookupLast='';
+let djRucLookupTimer=null;
+let djRucLookupLast='';
 
 function setRegLookupHint(text,type=''){
   const hint=document.getElementById('regLookupHint');
@@ -996,6 +998,55 @@ function initRegistrationLookup(){
   if(!docEl)return;
   docEl.addEventListener('input',lookupRegistrationDocument);
   docEl.addEventListener('blur',lookupRegistrationDocument);
+}
+
+function prepareDjProviderData(){
+  const razonEl=document.getElementById('dj_razon');
+  const rucEl=document.getElementById('dj_ruc');
+  if(razonEl&&providerName) razonEl.value=providerName;
+  if(rucEl&&providerRuc) rucEl.value=providerRuc;
+  lookupDjRuc(true);
+}
+
+function applyDjRucPayload(data){
+  const razonEl=document.getElementById('dj_razon');
+  const domEl=document.getElementById('dj_domfiscal');
+  const razon=data.razonSocial||data.razon_social||data.nombre||'';
+  const direccion=data.direccion||data.domicilioFiscal||data.domicilio_fiscal||'';
+  if(razonEl&&razon) razonEl.value=String(razon).trim().toUpperCase();
+  if(domEl&&direccion) domEl.value=String(direccion).trim();
+}
+
+function lookupDjRuc(force=false){
+  const rucEl=document.getElementById('dj_ruc');
+  if(!rucEl)return;
+  const numero=(rucEl.value||'').replace(/\D/g,'').slice(0,11);
+  rucEl.value=numero;
+  clearTimeout(djRucLookupTimer);
+  if(numero.length!==11){djRucLookupLast='';return;}
+  if(!force&&numero===djRucLookupLast)return;
+  if(!force&&numero!==djRucLookupLast){
+    const razonEl=document.getElementById('dj_razon');
+    const domEl=document.getElementById('dj_domfiscal');
+    if(razonEl) razonEl.value='';
+    if(domEl) domEl.value='';
+  }
+
+  djRucLookupTimer=setTimeout(async()=>{
+    djRucLookupLast=numero;
+    try{
+      const res=await fetch('/api/ruc?numero='+encodeURIComponent(numero),{cache:'no-store'});
+      const data=await res.json().catch(()=>({}));
+      if(res.ok&&data.ok) applyDjRucPayload(data);
+    }catch(e){}
+  },force?0:450);
+}
+
+function initDjRucLookup(){
+  const rucEl=document.getElementById('dj_ruc');
+  if(!rucEl)return;
+  rucEl.addEventListener('input',()=>lookupDjRuc(false));
+  rucEl.addEventListener('blur',()=>lookupDjRuc(true));
 }
 
 function createAccount(){
@@ -1811,6 +1862,7 @@ function markInduction(){inductionOk=true;const btn=document.getElementById('ind
 function openModal(id){
   document.getElementById(id).classList.add('open');
   if(id==='modalVideo') initVideoModal();
+  if(id==='modalDJ') prepareDjProviderData();
   if(id==='modalConsent'){
     document.getElementById('consDate').value=todayIso();
     loadConsentLocal();
@@ -1875,6 +1927,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   const tl=document.getElementById('todayLabel');if(tl)tl.textContent=todayPe();
   const cd=document.getElementById('consDate');if(cd)cd.value=todayIso();
   initRegistrationLookup();
+  initDjRucLookup();
   renderAll();
 });
 </script>

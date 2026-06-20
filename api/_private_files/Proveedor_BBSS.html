@@ -1,0 +1,1882 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Proveedor BBSS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --soft:#f8fafc;
+  --soft2:#f1f5f9;
+  --line:#e5e7eb;
+  --line2:#dbe2ea;
+  --text:#0f172a;
+  --muted:#64748b;
+  --blue:#0067ac;
+  --blue2:#005a99;
+  --blue3:#2563eb;
+  --gold:#c69214;
+  --gold2:#f5b800;
+  --green:#16a34a;
+  --green2:#dcfce7;
+  --greenText:#166534;
+  --red:#dc2626;
+  --red2:#fee2e2;
+  --redText:#991b1b;
+  --amber:#c69214;
+  --amber2:#fef3c7;
+  --amberText:#92400e;
+  --slate:#334155;
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow2:0 22px 70px rgba(15,23,42,.24);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);font-family:Inter,"Segoe UI",system-ui,sans-serif;color:var(--text);font-size:14px}
+button,input,select,textarea{font-family:inherit}
+body.dark{
+  --bg:#0f172a;
+  --card:#111827;
+  --soft:#111f33;
+  --soft2:#172133;
+  --line:#253247;
+  --line2:#2e3d55;
+  --text:#f8fafc;
+  --muted:#a5b4c7;
+  --shadow:0 10px 28px rgba(0,0,0,.28);
+  --shadow2:0 22px 70px rgba(0,0,0,.45);
+}
+
+/* ── LOGIN / REGISTER SCREENS ── */
+#loginView{display:block}
+#appView{display:none}
+.public-layout{min-height:100vh;display:grid;grid-template-rows:54px minmax(0,1fr) 36px;background:#fff;position:relative;overflow:hidden;font-family:Poppins,"Segoe UI",system-ui,sans-serif}
+body.dark .public-layout{background:#07172b}
+.public-header{height:54px;background:rgba(255,255,255,.82);backdrop-filter:blur(10px);border-bottom:1px solid rgba(15,23,42,.08);box-shadow:0 2px 12px rgba(15,23,42,.08);display:flex;align-items:center;justify-content:center;position:relative;z-index:5}
+.public-logo{height:38px;width:auto;display:block;object-fit:contain}
+.theme-toggle{position:absolute;right:14px;top:8px;height:36px;border:0;border-radius:8px;background:var(--gold);color:#fff;padding:0 18px;font-weight:800;box-shadow:0 8px 18px rgba(15,23,42,.18);cursor:pointer}
+.theme-toggle:hover{background:#d9a519}
+.network-bg{position:absolute;inset:54px 0 36px;pointer-events:none;overflow:hidden;background:linear-gradient(180deg,#fff 0%,#fcfdff 100%)}
+body.dark .network-bg{background:linear-gradient(180deg,#07172b 0%,#0a2540 100%)}
+.network-bg svg{position:absolute;inset:-4% -2%;width:104%;height:108%;opacity:.72}
+body.dark .network-bg svg{opacity:.48}
+.public-main{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;padding:18px}
+.login-shell{width:315px;background:linear-gradient(145deg,#5067b4,#245ed0);border-radius:24px;padding:66px 24px 18px;box-shadow:0 24px 58px rgba(15,23,42,.22);position:relative;color:#fff;animation:fadeUp .35s ease both}
+.login-icon{position:absolute;top:-35px;left:50%;transform:translateX(-50%);width:70px;height:70px;border-radius:50%;background:#f5b800;color:#000;border:4px solid #fff;display:grid;place-items:center;font-size:28px;box-shadow:0 12px 28px rgba(15,23,42,.18)}
+.login-title{text-align:center;font-size:23px;line-height:1;margin:0 0 10px;font-weight:900;color:#fff}
+.login-subtitle{text-align:center;margin:0 0 18px;color:#eef4ff;font-size:14px;font-weight:800}
+.login-card{background:rgba(255,255,255,.94);border-radius:16px;padding:18px 20px 16px;color:#111827;box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+.login-card h2{text-align:center;font-size:18px;line-height:1.2;margin:0 0 10px;font-weight:900}
+.login-card p{text-align:center;margin:0 0 14px;color:#64748b;font-weight:500;font-size:13px;line-height:1.4}
+.login-field{display:block;margin-bottom:12px}
+.login-field span{display:block;font-size:12px;font-weight:900;color:#334155;margin-bottom:6px}
+.login-field input{height:36px;width:100%;border:1px solid #d1d5db;border-radius:8px;background:#f8fafc;padding:7px 11px;outline:none;color:#111827;font-size:14px}
+.login-field input:focus{border-color:var(--blue3);box-shadow:0 0 0 3px rgba(37,99,235,.12);background:#fff}
+.lookup-hint{min-height:16px;margin:-6px 0 10px;font-size:11px;font-weight:800;color:#64748b}
+.lookup-hint.ok{color:#15803d}
+.lookup-hint.warn{color:#b45309}
+.lookup-hint.err{color:#b91c1c}
+.login-primary{width:100%;height:40px;border:0;border-radius:8px;background:#f5b800;color:#111827;font-size:15px;font-weight:900;box-shadow:0 8px 14px rgba(198,146,20,.25);cursor:pointer;margin-top:0}
+.login-primary:hover{background:#ffd04d}
+.login-link{text-align:center;margin-top:10px;font-size:12px;color:#64748b;font-weight:700;line-height:1.35}
+.login-link button{border:0;background:transparent;color:#c69214;font-weight:900;cursor:pointer;padding:0}
+.public-footer{height:36px;background:#000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;position:relative;z-index:3}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── APP HEADER ── */
+.header{height:52px;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(15,23,42,.06);display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:30}
+.logo-vd{height:31px;width:auto;display:block;object-fit:contain}
+.head-actions{position:absolute;right:18px;display:flex;gap:10px;align-items:center}
+.page{padding:24px 32px 38px;max-width:1560px;margin:0 auto}
+.screen{display:none}.screen.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:16px}
+.titlebar h1{font-size:24px;line-height:1.1;margin:0;font-weight:900;letter-spacing:-.025em;color:var(--text)}
+.subtitle{color:var(--muted);font-size:13px;margin-top:6px;font-weight:600}
+.btn{height:40px;border-radius:10px;border:1px solid transparent;padding:0 15px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:.15s;white-space:nowrap;background:#fff;color:#0f172a}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 16px rgba(15,23,42,.10)}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}.btn:disabled:hover{transform:none;box-shadow:none}
+.bblue{background:var(--blue3);color:#fff;border-color:var(--blue3)}
+.bvd{background:var(--blue);color:#fff;border-color:var(--blue)}
+.bgreen{background:var(--green);color:#fff;border-color:var(--green)}
+.bamber{background:var(--amber);color:#fff;border-color:var(--amber)}
+.bred{background:var(--red);color:#fff;border-color:var(--red)}
+.bogray{background:var(--card);color:var(--slate);border-color:#cbd5e1}
+body.dark .bogray{color:#e2e8f0;border-color:#475569;background:#0f172a}
+.toolbar{padding:16px;margin-bottom:16px}
+.filtergrid{display:grid;grid-template-columns:1.6fr 1fr 1fr .9fr auto;gap:14px;align-items:end}
+.field label{display:block;font-size:12px;font-weight:800;color:var(--slate);margin:0 0 6px}
+body.dark .field label{color:#cbd5e1}
+.ctrl{height:40px;width:100%;border:1px solid #d1d5db;border-radius:9px;background:var(--card);padding:8px 11px;outline:none;color:var(--text);font-size:14px}
+.ctrl:focus{border-color:var(--blue3);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.ctrl[readonly]{background:var(--soft);color:var(--muted)}
+textarea.ctrl{height:auto;min-height:78px;resize:vertical}
+.tablebox{overflow:hidden}.scroll{max-height:610px;overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:1080px}
+thead th{background:var(--blue);color:#fff;position:sticky;top:0;z-index:2;padding:12px 12px;font-size:13px;text-align:center;white-space:nowrap;font-weight:850}
+tbody td{padding:12px;border-bottom:1px solid #edf2f7;text-align:center;white-space:nowrap;color:var(--text)}
+body.dark tbody td{border-bottom-color:#243247}
+tbody tr{background:var(--card)}tbody tr:hover{background:var(--soft)}.left{text-align:left}
+.chip{height:26px;border-radius:999px;padding:0 12px;font-size:12px;font-weight:850;display:inline-flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.01em;white-space:nowrap}
+.chip-green{background:var(--green2);color:var(--greenText)}.chip-red{background:var(--red2);color:var(--redText)}.chip-amber{background:var(--amber2);color:var(--amberText)}.chip-blue{background:#dbeafe;color:#1d4ed8}.chip-gray{background:#e5e7eb;color:#374151}.chip-soft{background:#f1f5f9;color:#334155}.chip-slate{background:#e2e8f0;color:#334155}
+.btnshow{height:32px;border-radius:8px;border:0;background:var(--blue);color:#fff;font-weight:800;padding:0 14px;display:inline-flex;align-items:center;gap:7px;cursor:pointer}.btnshow:hover{background:var(--blue2)}
+.btnghost{height:32px;border-radius:8px;border:1px solid #cbd5e1;background:var(--card);color:var(--text);font-weight:800;padding:0 12px;display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.btnghost:hover{border-color:var(--blue3);color:var(--blue3)}
+.infocard{padding:18px 22px;margin-bottom:16px}.sectiontitle{display:flex;align-items:center;gap:9px;font-size:15px;font-weight:900;margin:0 0 14px;color:var(--text)}.sectiontitle i{color:var(--blue3)}
+.infog{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 28px}.lab{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}.val{font-weight:850;color:var(--text);font-size:13px;line-height:1.25}
+.stepbox{padding:18px 22px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.step{border:1px solid var(--line2);border-radius:14px;background:var(--soft);padding:15px;display:flex;gap:12px;align-items:flex-start}.stepn{width:30px;height:30px;border-radius:999px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:900;flex-shrink:0}.stept{font-weight:900;margin-bottom:3px}.stepd{color:var(--muted);font-size:13px;line-height:1.35}.step-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.topdetail{padding:18px 22px;margin-bottom:16px}.toprow{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}.rtitle{font-size:24px;font-weight:900;letter-spacing:-.035em;margin:0 0 12px;color:var(--text)}.meta{display:flex;align-items:center;flex-wrap:wrap;gap:14px;color:var(--slate);font-size:13px}.meta b{font-weight:850;color:var(--text)}body.dark .meta{color:#cbd5e1}.detail-actions{display:flex;gap:10px;flex-wrap:wrap}.progressline{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;margin-top:16px}.bar{height:12px;border-radius:999px;background:var(--soft2);overflow:hidden;border:1px solid var(--line)}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));width:0%;transition:.25s}.barlabel{font-size:12px;font-weight:900;color:var(--slate)}body.dark .barlabel{color:#cbd5e1}
+.doc-layout{display:grid;grid-template-columns:390px 1fr;gap:18px;align-items:start}.docpanel,.workpanel{padding:18px;min-height:560px}.doclist{display:flex;flex-direction:column;gap:8px}.checkitem{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:11px 12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;cursor:pointer;transition:.15s}.checkitem:hover{border-color:#93c5fd;background:var(--soft)}.checkitem.active{border-color:var(--blue3);box-shadow:0 0 0 3px rgba(37,99,235,.12)}.checktitle{display:flex;gap:9px;align-items:flex-start;font-weight:900;line-height:1.25}.checktitle i{color:var(--blue3);width:18px;text-align:center;margin-top:1px}.checksub{font-size:12px;color:var(--muted);font-weight:650;margin-top:4px}.mini-status{height:26px;border-radius:9px;border:1px solid transparent;padding:0 10px;font-size:11px;font-weight:900;display:inline-flex;align-items:center;white-space:nowrap}.st-pendiente{background:#f8fafc;color:#475569;border-color:#cbd5e1}.st-cargado{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe}.st-revision{background:#fffbeb;color:#92400e;border-color:#fde68a}.st-observado{background:#fef2f2;color:#991b1b;border-color:#fecaca}.st-aprobado{background:#ecfdf5;color:#166534;border-color:#86efac}.st-rechazado{background:#fee2e2;color:#991b1b;border-color:#fecaca}.st-vencido{background:#fff1f2;color:#be123c;border-color:#fecdd3}.st-noaplica{background:#e5e7eb;color:#374151;border-color:#cbd5e1}
+.workhead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px}.worktitle{font-size:20px;font-weight:900;letter-spacing:-.02em;margin:0}.workdesc{color:var(--muted);font-weight:600;line-height:1.4;margin-top:5px}.tagrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 18px}.span2{grid-column:1/-1}.actionsbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+.flow{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.flowstep{height:30px;border:1px solid var(--line);border-radius:999px;background:var(--soft);padding:0 12px;display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:900;color:var(--slate)}.flowstep.done{background:#ecfdf5;border-color:#86efac;color:#166534}.flowstep.active{background:#dbeafe;border-color:#bfdbfe;color:#1d4ed8}
+.uploadbox{border:1px dashed #94a3b8;border-radius:14px;background:var(--soft);padding:16px;margin-top:14px}.uploadgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}.fileline{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.filebtn{height:38px;border-radius:9px;border:1px solid #cbd5e1;background:var(--card);color:var(--text);font-weight:800;padding:0 12px;display:inline-flex;align-items:center;gap:7px;cursor:pointer}.filename{color:var(--muted);font-size:13px;font-weight:700}.hint{font-size:12px;color:var(--muted);font-weight:650;margin-top:7px;line-height:1.35}.history{margin-top:16px;border:1px solid var(--line);border-radius:12px;overflow:hidden}.history-title{padding:10px 12px;background:var(--soft);font-weight:900;border-bottom:1px solid var(--line)}.history-row{display:grid;grid-template-columns:150px 1fr 170px;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px}.history-row:last-child{border-bottom:0}.role-table table{min-width:0}.role-table thead th{position:relative;top:auto}.role-table td,.role-table th{padding:10px}.role-actions{display:flex;gap:7px;justify-content:center}.role-upload{display:none}.emptymsg{border:1px solid var(--line);border-radius:12px;background:var(--soft);padding:20px;text-align:center;color:var(--muted);font-weight:700}
+.notice{border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:12px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;font-weight:700;line-height:1.35;margin-bottom:14px}.notice i{margin-top:2px}.warning{border-color:#fde68a;background:#fffbeb;color:#92400e}.danger{border-color:#fecaca;background:#fef2f2;color:#991b1b}
+/* ── Doc list rows (mockup style) ── */
+.docrow{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:15px 20px;border-bottom:1px solid var(--line)}
+.doc-acts{display:flex;align-items:center;gap:9px;flex-shrink:0;min-width:220px;justify-content:flex-end}
+.docrow:last-child{border-bottom:0}
+.docrow:hover{background:var(--soft)}
+.doc-icon{width:38px;height:38px;border-radius:10px;background:#dbeafe;display:grid;place-items:center;font-size:17px;color:var(--blue);flex-shrink:0}
+.doc-title{font-weight:800;font-size:14px;color:var(--text);line-height:1.3}
+.doc-meta{font-size:12px;color:var(--muted);margin-top:3px;font-weight:600}
+.doc-acts{display:flex;align-items:center;gap:9px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.round-btn{width:38px;height:38px;border-radius:50%;border:0;color:#fff;display:inline-grid;place-items:center;cursor:pointer;font-size:15px;transition:.15s;flex-shrink:0}
+.round-btn:hover{transform:scale(1.1)}
+.rb{background:var(--blue)}
+.rg{background:var(--green)}
+.rr{background:var(--red)}
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.role-card{border-radius:12px;padding:12px 14px;border:1px solid transparent}
+.rc-red{background:#fff5f5;border-color:#fecaca;color:#991b1b}
+.rc-yel{background:#fffdf0;border-color:#fde68a;color:#92400e}
+.rc-blue{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+.rc-green{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.rc-name{font-weight:900;font-size:13px;display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.rc-file{font-size:12px;font-weight:600;margin-bottom:6px;opacity:.85}
+.rc-acts{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.modalbg{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:80;display:none;align-items:center;justify-content:center;padding:18px}.modalbg.open{display:flex}.modal{width:min(760px,96vw);max-height:94vh;overflow:auto;background:var(--card);border-radius:12px;box-shadow:var(--shadow2);position:relative;border:1px solid var(--line)}.modal.wide{width:min(980px,96vw)}.modalhead{height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;border-bottom:1px solid var(--line)}.modalhead h2{font-size:18px;font-weight:900;margin:0}.xbtn{width:32px;height:32px;border:0;background:var(--soft);border-radius:50%;font-size:18px;line-height:1;cursor:pointer;color:var(--slate)}.modalbody{padding:18px 22px 22px}.modalfoot{display:flex;justify-content:flex-end;gap:10px;padding:0 22px 22px;margin-top:12px}.toast{position:fixed;right:24px;bottom:24px;z-index:100;background:#111827;color:#fff;padding:13px 16px;border-radius:10px;box-shadow:0 18px 40px rgba(15,23,42,.28);display:none;font-weight:800}.hide{display:none!important}
+@media(max-width:1200px){.doc-layout{grid-template-columns:1fr}.infog,.steps{grid-template-columns:repeat(2,1fr)}.filtergrid{grid-template-columns:repeat(2,1fr)}.filtergrid .btn{width:100%}}
+@media(max-width:760px){.public-logo{height:34px}.theme-toggle{right:8px;padding:0 12px}.login-shell{width:calc(100vw - 36px)}.page{padding:18px}.titlebar,.toprow,.providerrow,.workhead{flex-direction:column;align-items:flex-start}.filtergrid,.formgrid,.infog,.steps,.uploadgrid{grid-template-columns:1fr}.detail-actions,.titlebar .detail-actions{width:100%}.detail-actions .btn{flex:1}.rtitle{font-size:22px}.logo-vd{height:28px}.head-actions{position:static;margin-left:auto;margin-right:10px}.history-row{grid-template-columns:1fr}table{min-width:900px}}
+#modalPreview .modal{width:min(850px,96vw);max-height:92vh;border-radius:16px;box-shadow:0 25px 70px rgba(0,0,0,.32);border:0}
+#modalPreview .mh{height:62px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+#modalPreview .mh h2{font-size:20px;margin:0;font-weight:800;color:#111827}
+#modalPreview .close{width:34px;height:34px;border:0;background:#f3f4f6;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#374151}
+#modalPreview .mbody{padding:12px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     PANTALLAS PÚBLICAS (LOGIN / REGISTRO)
+     ══════════════════════════════════════ -->
+<div id="loginView">
+
+  <!-- LOGIN -->
+  <section id="screenLogin" class="pub-screen active" style="display:block">
+    <div class="public-layout">
+      <header class="public-header">
+        <img class="public-logo" src="https://www.vetadorada.pe/img/logo_home.png" alt="VetaDorada">
+        <button class="theme-toggle" onclick="toggleDark()" id="publicDarkBtn">Modo Oscuro</button>
+      </header>
+      <div class="network-bg" aria-hidden="true">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
+          <g fill="none" stroke="#0067AC" stroke-width="1.15" stroke-opacity=".38">
+            <path d="M28 215 96 246 136 190 90 112 28 215Zm178 548 68-62 94 32 40 90-126 35-76-95Zm1061-622 66-44 104 58 41 100-128 34-85-148Zm-905-18 78 48 92-10 44 68-68 96-126-46-20-156Zm705 622 85-56 88 22 32 62-96 52-109-80Zm384-360 55-74 72 31 29 87-98 42-58-86Z"/>
+            <path d="M28 215 136 190 96 246 28 215M206 763 274 701 368 733 408 823M1267 141 1333 97 1437 155 1478 255M362 123 440 171 532 161 576 229 508 325M1067 745 1152 689 1240 711 1272 773M1451 385 1506 311 1578 342 1607 429"/>
+            <path d="M770 104 852 147 900 93 836 38 770 104Zm590 612 88-34 78 54-32 82-104-10-30-92Zm-850-590 102-74 94 20 36 84-118 66-114-96Zm290 550 72-30 102 40 8 78-112 22-70-110Z"/>
+          </g>
+          <g fill="#0067AC" fill-opacity=".82">
+            <circle cx="28" cy="215" r="3"/><circle cx="96" cy="246" r="3"/><circle cx="136" cy="190" r="3"/><circle cx="90" cy="112" r="3"/>
+            <circle cx="206" cy="763" r="3"/><circle cx="274" cy="701" r="3"/><circle cx="368" cy="733" r="3"/><circle cx="408" cy="823" r="3"/>
+            <circle cx="1267" cy="141" r="3"/><circle cx="1333" cy="97" r="3"/><circle cx="1437" cy="155" r="3"/><circle cx="1478" cy="255" r="3"/>
+            <circle cx="362" cy="123" r="3"/><circle cx="440" cy="171" r="3"/><circle cx="532" cy="161" r="3"/><circle cx="576" cy="229" r="3"/>
+            <circle cx="770" cy="104" r="3"/><circle cx="852" cy="147" r="3"/><circle cx="900" cy="93" r="3"/><circle cx="836" cy="38" r="3"/>
+            <circle cx="1067" cy="745" r="3"/><circle cx="1152" cy="689" r="3"/><circle cx="1240" cy="711" r="3"/><circle cx="1272" cy="773" r="3"/>
+            <circle cx="1451" cy="385" r="3"/><circle cx="1506" cy="311" r="3"/><circle cx="1578" cy="342" r="3"/><circle cx="1607" cy="429" r="3"/>
+            <circle cx="720" cy="402" r="3"/><circle cx="1210" cy="493" r="3"/><circle cx="318" cy="536" r="3"/><circle cx="1475" cy="674" r="3"/><circle cx="594" cy="712" r="3"/>
+          </g>
+        </svg>
+      </div>
+      <main class="public-main">
+        <div class="login-shell">
+          <div class="login-icon"><i class="fa-solid fa-user"></i></div>
+          <h1 class="login-title">Iniciar Sesión</h1>
+          <div class="login-subtitle">Acceso de Proveedores</div>
+          <div class="login-card">
+            <h2>Acceso de<br>Proveedores</h2>
+            <p>Ingresa con tu RUC y contraseña</p>
+            <label class="login-field"><span>RUC</span><input id="loginRuc" maxlength="11" value="000000000001" autocomplete="username"></label>
+            <label class="login-field"><span>Contraseña</span><input id="loginPass" type="password" autocomplete="current-password"></label>
+            <button class="login-primary" onclick="doLogin()">Iniciar Sesión</button>
+            <div class="login-link">¿No tienes cuenta? <button onclick="showPubScreen('screenRegister')">Regístrate aquí</button></div>
+            <div style="text-align:center;margin-top:10px"><button onclick="showPubScreen('screenRecover')" style="border:0;background:transparent;color:#0067ac;font-weight:700;font-size:12px;cursor:pointer"><i class="fa-solid fa-lock" style="font-size:11px"></i> Recuperar Contraseña</button></div>
+          </div>
+        </div>
+      </main>
+      <footer class="public-footer">© 2025 Veta Dorada - Todos los derechos reservados</footer>
+    </div>
+  </section>
+
+  <!-- REGISTRO -->
+  <section id="screenRegister" class="pub-screen" style="display:none">
+    <div class="public-layout">
+      <header class="public-header">
+        <img class="public-logo" src="https://www.vetadorada.pe/img/logo_home.png" alt="VetaDorada">
+        <button class="theme-toggle" onclick="toggleDark()">Modo Oscuro</button>
+      </header>
+      <div class="network-bg" aria-hidden="true">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
+          <g fill="none" stroke="#0067AC" stroke-width="1.1" stroke-opacity=".32">
+            <path d="M82 205 178 166 260 224 220 326 112 300 82 205Zm1080 65 80-76 120 36 34 112-126 56-108-128Zm-784 494 84-80 106 42 24 108-132 42-82-122Zm850-10 108-42 86 66-52 86-108-10-34-100Z"/>
+          </g>
+          <g fill="#0067AC">
+            <circle cx="82" cy="205" r="3"/><circle cx="178" cy="166" r="3"/><circle cx="260" cy="224" r="3"/><circle cx="220" cy="326" r="3"/>
+            <circle cx="1162" cy="270" r="3"/><circle cx="1242" cy="194" r="3"/><circle cx="1362" cy="230" r="3"/><circle cx="1396" cy="342" r="3"/>
+          </g>
+        </svg>
+      </div>
+      <main class="public-main">
+        <div class="login-shell" style="width:390px;padding-top:62px">
+          <div class="login-icon"><i class="fa-solid fa-user-plus"></i></div>
+          <h1 class="login-title">Registro</h1>
+          <div class="login-subtitle">Crear cuenta de proveedor</div>
+          <div class="login-card">
+            <h2>Datos de acceso</h2>
+            <p>Complete la información para crear tu cuenta.</p>
+            <label class="login-field"><span>RUC / Documento</span><input id="regRuc" maxlength="11" value="000000000001" inputmode="numeric" autocomplete="off"></label>
+            <div class="lookup-hint" id="regLookupHint"></div>
+            <label class="login-field"><span>Razón social / Nombre</span><input id="regName"></label>
+            <label class="login-field"><span>Correo</span><input id="regEmail" type="email" value="proveedor@empresa.com"></label>
+            <button class="login-primary" onclick="createAccount()">Crear cuenta</button>
+            <div class="login-link">¿Ya tienes cuenta? <button onclick="showPubScreen('screenLogin')">Inicia sesión</button></div>
+          </div>
+        </div>
+      </main>
+      <footer class="public-footer">© 2025 Veta Dorada - Todos los derechos reservados</footer>
+    </div>
+  </section>
+
+  <!-- RECUPERAR CONTRASEÑA -->
+  <section id="screenRecover" class="pub-screen" style="display:none">
+    <div class="public-layout">
+      <header class="public-header">
+        <img class="public-logo" src="https://www.vetadorada.pe/img/logo_home.png" alt="VetaDorada">
+        <button class="theme-toggle" onclick="toggleDark()">Modo Oscuro</button>
+      </header>
+      <div class="network-bg" aria-hidden="true">
+        <svg viewBox="0 0 1600 900" preserveAspectRatio="none">
+          <g fill="none" stroke="#0067AC" stroke-width="1.1" stroke-opacity=".32">
+            <path d="M82 205 178 166 260 224 220 326 112 300 82 205Zm1080 65 80-76 120 36 34 112-126 56-108-128Zm-784 494 84-80 106 42 24 108-132 42-82-122Zm850-10 108-42 86 66-52 86-108-10-34-100Z"/>
+          </g>
+          <g fill="#0067AC">
+            <circle cx="82" cy="205" r="3"/><circle cx="178" cy="166" r="3"/><circle cx="260" cy="224" r="3"/><circle cx="220" cy="326" r="3"/>
+            <circle cx="1162" cy="270" r="3"/><circle cx="1242" cy="194" r="3"/><circle cx="1362" cy="230" r="3"/><circle cx="1396" cy="342" r="3"/>
+          </g>
+        </svg>
+      </div>
+      <main class="public-main">
+        <div class="login-shell" style="width:340px;padding-top:62px" id="recoverShell">
+          <div class="login-icon" style="background:#0067ac"><i class="fa-solid fa-key" style="color:#fff"></i></div>
+          <h1 class="login-title">Recuperar</h1>
+          <div class="login-subtitle">Restablece tu contraseña</div>
+          <div class="login-card" id="recoverForm">
+            <h2>¿Olvidaste tu<br>contraseña?</h2>
+            <p>Ingresa tu RUC y correo registrado. Te enviaremos las instrucciones de restablecimiento.</p>
+            <label class="login-field"><span>RUC / Documento</span><input id="recRuc" maxlength="11" placeholder="Ingresa tu RUC"></label>
+            <label class="login-field"><span>Correo electrónico</span><input id="recEmail" type="email" placeholder="correo@empresa.com"></label>
+            <button class="login-primary" onclick="sendRecover()">Enviar instrucciones</button>
+            <div class="login-link" style="margin-top:10px"><button onclick="showPubScreen('screenLogin')"><i class="fa-solid fa-arrow-left" style="font-size:11px"></i> Volver al inicio de sesión</button></div>
+          </div>
+          <div class="login-card" id="recoverOk" style="display:none">
+            <div style="text-align:center;padding:10px 0">
+              <div style="width:58px;height:58px;background:#dcfce7;border-radius:50%;display:grid;place-items:center;margin:0 auto 14px;font-size:26px;color:#16a34a"><i class="fa-solid fa-circle-check"></i></div>
+              <h2 style="margin-bottom:10px">Correo enviado</h2>
+              <p style="color:#64748b;font-size:13px;font-weight:500;line-height:1.5">Revisa tu bandeja de entrada. Si el RUC y correo están registrados, recibirás las instrucciones en breve.</p>
+            </div>
+            <button class="login-primary" style="margin-top:14px" onclick="showPubScreen('screenLogin')">Volver al inicio de sesión</button>
+          </div>
+        </div>
+      </main>
+      <footer class="public-footer">© 2025 Veta Dorada - Todos los derechos reservados</footer>
+    </div>
+  </section>
+
+</div><!-- /#loginView -->
+
+
+<!-- ══════════════════════════════════════
+     APLICACIÓN PRINCIPAL
+     ══════════════════════════════════════ -->
+<div id="appView">
+  <header class="header" aria-label="Veta Dorada">
+    <img class="logo-vd" src="https://www.vetadorada.pe/img/logo_home.png" alt="VetaDorada">
+    <div class="head-actions">
+      <button class="btn bamber" onclick="toggleDark()" id="darkBtn"><i class="fa-solid fa-moon"></i> Modo Oscuro</button>
+      <button class="btn bogray" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <!-- ══ INICIO: tarjeta de acceso ══ -->
+    <section id="screenHome" class="screen active">
+      <div style="min-height:calc(100vh - 52px);display:flex;flex-direction:column;align-items:center;padding-top:60px">
+
+        <!-- Saludo -->
+        <div style="text-align:center;margin-bottom:48px">
+          <div id="homeGreeting" style="font-size:34px;font-weight:900;color:var(--text);letter-spacing:-.03em;line-height:1.15">¡Bienvenido!</div>
+          <div id="homeRazonSocial" style="font-size:16px;font-weight:700;color:var(--muted);margin-top:10px;display:none"></div>
+        </div>
+
+        <!-- Tarjeta Perfil de Proveedor — centrada -->
+        <button onclick="showScreen('screenProfile')"
+          style="width:210px;height:210px;border-radius:24px;border:2px solid var(--line);background:var(--card);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;cursor:pointer;transition:.2s;padding:0"
+          onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 18px 40px rgba(15,23,42,.14)'"
+          onmouseout="this.style.transform='';this.style.boxShadow='var(--shadow)'">
+          <div style="width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue3));display:grid;place-items:center">
+            <i class="fa-solid fa-user" style="font-size:32px;color:#fff"></i>
+          </div>
+          <div style="font-size:15px;font-weight:900;color:var(--text)">Perfil de Proveedor</div>
+          <div style="font-size:12px;font-weight:600;color:var(--muted)">Ver datos y documentos</div>
+        </button>
+
+      </div>
+
+      <!-- FABs esquina inferior derecha -->
+      <div style="position:fixed;bottom:28px;right:28px;display:flex;flex-direction:column;gap:12px;z-index:50">
+
+        <!-- Video inductivo -->
+        <button onclick="openModal('modalVideo')"
+          title="Ver video inductivo"
+          style="width:52px;height:52px;border-radius:50%;border:0;background:#dc2626;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 6px 18px rgba(220,38,38,.45);display:grid;place-items:center;transition:.2s"
+          onmouseover="this.style.transform='scale(1.12)'" onmouseout="this.style.transform=''">
+          <i class="fa-solid fa-video"></i>
+        </button>
+
+        <!-- Descargar manual -->
+        <a href="/assets/MANUAL_PROVEEDOR.pdf" download
+          title="Descargar manual del proveedor"
+          style="width:52px;height:52px;border-radius:50%;background:#16a34a;color:#fff;font-size:20px;box-shadow:0 6px 18px rgba(22,163,74,.45);display:grid;place-items:center;text-decoration:none;transition:.2s"
+          onmouseover="this.style.transform='scale(1.12)'" onmouseout="this.style.transform=''">
+          <i class="fa-solid fa-file-lines"></i>
+        </a>
+
+        <!-- Preguntas frecuentes -->
+        <button onclick="openModal('modalFaq')"
+          title="Preguntas frecuentes"
+          style="width:52px;height:52px;border-radius:50%;border:0;background:#2563eb;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 6px 18px rgba(37,99,235,.45);display:grid;place-items:center;transition:.2s"
+          onmouseover="this.style.transform='scale(1.12)'" onmouseout="this.style.transform=''">
+          <i class="fa-solid fa-question"></i>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- ══ PERFIL + REGISTROS ══ -->
+    <section id="screenProfile" class="screen">
+      <div class="titlebar">
+        <div>
+          <h1>Perfil de Proveedor</h1>
+          <div class="subtitle">Datos básicos del proveedor y registros documentales asociados.</div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn bogray" onclick="showScreen('screenHome')"><i class="fa-solid fa-arrow-left"></i> Inicio</button>
+          <button class="btn bgreen" onclick="startRegistration()"><i class="fa-solid fa-plus"></i> Crear nuevo registro</button>
+        </div>
+      </div>
+
+      <!-- Datos básicos -->
+      <div class="card infocard" style="margin-bottom:16px">
+        <h3 class="sectiontitle"><i class="fa-solid fa-id-card"></i> Datos del proveedor</h3>
+        <div class="infog">
+          <div><span class="lab">RUC</span><div class="val" id="profileRuc">000000000001</div></div>
+          <div><span class="lab">Razón social</span><div class="val" id="profileName">PROVEEDOR 000000000001</div></div>
+          <div><span class="lab">Tipo</span><div class="val" id="profileType">Proveedor de bienes y servicios</div></div>
+          <div><span class="lab">KYB Status</span><span id="kybStatusChip" class="chip chip-soft" style="font-size:11px;gap:5px"><i class="fa-solid fa-shield-halved"></i> KYB Pendiente</span></div>
+          <div><span class="lab">Correo</span><div class="val" id="profileEmail">proveedor@empresa.com</div></div>
+          <div><span class="lab">Fecha de registro</span><div class="val" id="profileDate">16/06/2026</div></div>
+          <div><span class="lab">Canal de ingreso</span><div class="val">Portal web</div></div>
+          <div><span class="lab">Estado Docs.</span><span id="profileDocsStatus" class="chip chip-soft">PENDIENTE</span></div>
+        </div>
+      </div>
+
+      <!-- Registros documentales -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="padding:14px 18px 0"><h3 class="sectiontitle"><i class="fa-solid fa-folder-open"></i> Registros documentales</h3></div>
+        <div class="tablebox">
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:80px">ITEM</th>
+                  <th style="width:150px">Código registro</th>
+                  <th style="width:170px">Estado Docs.</th>
+                  <th style="width:150px">Fecha registro</th>
+                  <th style="width:120px">Aprobados</th>
+                  <th style="width:120px">En revisión</th>
+                  <th style="width:120px">Observados</th>
+                  <th style="width:120px">Pendientes</th>
+                  <th style="width:170px">Opciones</th>
+                </tr>
+              </thead>
+              <tbody id="recordRows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="screenDocs" class="screen">
+      <div class="titlebar">
+        <div>
+          <h1 id="docsTitle">Registro de Documentos de: <span id="docsRuc">000000000001</span></h1>
+          <div class="subtitle" id="docsSubtitle">Cargue cada documento requerido. Los obligatorios deben completarse antes de enviar a revisión.</div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn bogray" onclick="showScreen('screenProfile')"><i class="fa-solid fa-arrow-left"></i> Mis registros</button>
+          <button class="btn bgreen" onclick="sendReview()"><i class="fa-solid fa-paper-plane"></i> Enviar a revisión</button>
+        </div>
+      </div>
+
+
+      <!-- Barra de progreso -->
+      <div class="card" style="padding:14px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px">
+        <div style="flex:1">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <span style="font-size:12px;font-weight:800;color:var(--slate)">Progreso general</span>
+            <span id="progressText" style="font-size:12px;font-weight:900;color:var(--blue)">0 de 8 completos</span>
+          </div>
+          <div class="bar"><span id="progressBar"></span></div>
+        </div>
+        <span id="detailStatus" class="chip chip-amber" style="flex-shrink:0">EN REVISIÓN</span>
+      </div>
+
+      <!-- Lista de documentos -->
+      <div class="card" style="overflow:hidden">
+        <div id="docRows"></div>
+        <!-- Botón guardar al pie -->
+        <div style="padding:16px 20px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end">
+          <button class="btn bogray" onclick="showScreen('screenProfile')"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+          <button class="btn bblue" onclick="saveAll()"><i class="fa-solid fa-floppy-disk"></i> Guardar avance</button>
+          <button class="btn bgreen" onclick="sendReview()"><i class="fa-solid fa-paper-plane"></i> Enviar a revisión</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div><!-- /#appView -->
+
+
+<!-- MODALES -->
+<div id="modalVideo" class="modalbg" style="background:rgba(0,0,0,.88)">
+  <div style="width:min(520px,92vw);background:#fff;border-radius:8px;padding:34px 20px 18px;box-shadow:0 24px 70px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:14px">
+
+    <p style="text-align:center;color:#475569;font-size:12px;font-weight:700;margin:0 0 4px">
+      Antes de continuar, debe ver el video informativo y descargar el manual.
+    </p>
+
+    <!-- Reproductor de video -->
+    <div style="border-radius:4px;overflow:hidden;background:#000;position:relative;aspect-ratio:16/9">
+      <video id="inductionVideo" style="width:100%;height:100%;display:block;object-fit:contain;background:#000" controls preload="metadata" controlsList="nodownload" onloadedmetadata="this.currentTime=Math.min(0.05,this.duration||0)" onended="onVideoEnded()" ontimeupdate="onVideoProgress(this)">
+        <source src="/assets/VIDEO_COMPLIANCE.mp4" type="video/mp4">
+      </video>
+      <!-- Fallback si no hay video -->
+      <div id="videoFallback" style="display:none;height:280px;background:linear-gradient(135deg,#0a1929,#0f3460);align-items:center;justify-content:center;flex-direction:column;gap:14px;color:#fff;text-align:center;padding:24px">
+        <img src="https://www.vetadorada.pe/img/logo_home.png" alt="VetaDorada" style="height:52px;filter:brightness(0) invert(1);opacity:.9">
+        <div style="font-size:13px;color:#94a3b8;font-weight:600;margin-top:4px">Video no encontrado. Coloca <b style="color:#f5b800">VIDEO_COMPLIANCE.mp4</b> en /assets/.</div>
+      </div>
+    </div>
+
+    <!-- Barra de progreso del video -->
+    <div style="background:#e2e8f0;border-radius:999px;height:6px;overflow:hidden;margin-top:2px">
+      <div id="videoProgressBar" style="height:100%;width:0%;background:linear-gradient(90deg,#0067ac,#16a34a);border-radius:999px;transition:width .3s"></div>
+    </div>
+
+    <!-- Botones -->
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <a id="btnManual" href="/assets/MANUAL_PROVEEDOR.pdf" download
+         style="display:flex;align-items:center;justify-content:center;gap:9px;height:36px;border-radius:4px;background:#86d6a4;color:#fff;font-weight:900;font-size:13px;text-decoration:none;opacity:.55;pointer-events:none;transition:.2s"
+         onclick="return document.getElementById('btnManual').style.pointerEvents!=='none'||false">
+        <i class="fa-solid fa-file-arrow-down"></i> Descargar Manual
+      </a>
+      <button id="btnContinuar"
+         style="height:36px;border-radius:4px;border:0;background:#9ca8b8;color:#fff;font-weight:900;font-size:13px;cursor:not-allowed;opacity:.55;transition:.2s"
+         onclick="finishInduction()" disabled>
+        Continuar
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<div id="modalConsent" class="modalbg">
+  <div class="modal" style="width:min(1100px,96vw);max-height:96vh;display:flex;flex-direction:column">
+    <div class="modalhead" style="background:var(--blue);color:#fff;border-radius:12px 12px 0 0;flex-shrink:0">
+      <h2 style="color:#fff;font-size:15px"><i class="fa-solid fa-file-signature" style="margin-right:8px"></i>Consentimiento de Tratamiento de Datos Personales</h2>
+      <button class="xbtn" style="background:rgba(255,255,255,.2);color:#fff" onclick="closeModal('modalConsent')">&times;</button>
+    </div>
+    <div style="display:grid;grid-template-columns:340px 1fr;flex:1;overflow:hidden;min-height:0">
+
+      <!-- PANEL IZQUIERDO: formulario -->
+      <div style="padding:18px;border-right:1px solid var(--line);overflow-y:auto;display:flex;flex-direction:column;gap:12px">
+        <div style="font-size:12px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.05em">Datos del declarante</div>
+
+        <div class="field"><label>Nombres y apellidos / Razón social</label><input id="consName" class="ctrl" value="PROVEEDOR 000000000001" oninput="updateConsentPreview()"></div>
+        <div class="field"><label>Tipo de documento</label>
+          <select id="consTipo" class="ctrl" onchange="updateConsentPreview()">
+            <option>DNI</option><option>CE</option><option>RUC</option><option>Pasaporte</option>
+          </select>
+        </div>
+        <div class="field"><label>Número de documento</label><input id="consDoc" class="ctrl" value="000000000001" oninput="updateConsentPreview()"></div>
+        <div class="field"><label>Consentimiento</label>
+          <select id="consResp" class="ctrl" onchange="updateConsentPreview()">
+            <option>SÍ autorizo</option><option>NO autorizo</option>
+          </select>
+        </div>
+        <div class="field"><label>Ciudad</label><input id="consCity" class="ctrl" value="Lima" oninput="updateConsentPreview()"></div>
+        <div class="field"><label>Fecha</label><input id="consDate" class="ctrl" type="date" oninput="updateConsentPreview()"></div>
+      </div>
+
+      <!-- PANEL DERECHO: vista previa en tiempo real -->
+      <div style="overflow-y:auto;overflow-x:hidden;background:#e5e7eb;padding:16px;display:flex;justify-content:center">
+        <div id="consentPreview" style="width:100%;background:#fff;box-shadow:0 4px 16px rgba(0,0,0,.15);font-family:'Times New Roman',Times,serif;font-size:10.5pt;color:#111;line-height:1.45;padding:32px 40px;border-radius:4px;position:relative;overflow:hidden">
+          <!-- Se actualiza en tiempo real -->
+        </div>
+      </div>
+
+    </div>
+    <div style="display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--line);justify-content:flex-end;flex-shrink:0">
+      <button class="btn bogray" onclick="closeModal('modalConsent')">Cancelar</button>
+      <button class="btn bvd" onclick="generarPdfConsent()"><i class="fa-solid fa-file-pdf"></i> Generar PDF para firma</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalDJ" class="modalbg">
+  <div class="modal wide" style="width:min(1000px,96vw)">
+    <div class="modalhead" style="background:var(--blue);color:#fff;border-radius:12px 12px 0 0">
+      <h2 style="color:#fff;font-size:15px"><i class="fa-solid fa-file-contract" style="margin-right:8px"></i>Declaración Jurada de Debida Diligencia — Conocimiento del Proveedor</h2>
+      <button class="xbtn" style="background:rgba(255,255,255,.2);color:#fff" onclick="closeModal('modalDJ')">&times;</button>
+    </div>
+    <div class="modalbody">
+
+      <!-- 1. DATOS GENERALES -->
+      <h3 class="sectiontitle"><i class="fa-solid fa-building"></i> 1. Datos generales de la empresa</h3>
+      <div class="formgrid">
+        <div class="field"><label>Razón Social</label><input id="dj_razon" class="ctrl" value="PROVEEDOR 000000000001"></div>
+        <div class="field"><label>Nombre Comercial</label><input id="dj_comercial" class="ctrl" placeholder="Nombre comercial"></div>
+        <div class="field"><label>N° RUC</label><input id="dj_ruc" class="ctrl" value="000000000001"></div>
+        <div class="field"><label>Fecha de Constitución</label><input id="dj_constitucion" class="ctrl" type="date"></div>
+        <div class="field span2"><label>Domicilio Fiscal</label><input id="dj_domfiscal" class="ctrl" placeholder="Dirección fiscal completa"></div>
+        <div class="field span2"><label>Dirección Comercial</label><input id="dj_domcomercial" class="ctrl" placeholder="Dirección comercial si difiere del fiscal"></div>
+        <div class="field"><label>Giro del Negocio</label><input id="dj_giro" class="ctrl" placeholder="Actividad principal"></div>
+        <div class="field"><label>CIUU SUNAT Principal</label><input id="dj_ciuu1" class="ctrl" placeholder="Código CIUU"></div>
+        <div class="field"><label>Años de Experiencia</label><input id="dj_anios" class="ctrl" type="number" min="0" placeholder="0"></div>
+        <div class="field"><label>N° Trabajadores</label><input id="dj_trabajadores" class="ctrl" type="number" min="0" placeholder="0"></div>
+        <div class="field"><label>Teléfonos / Celular</label><input id="dj_telefono" class="ctrl" placeholder="+51 ..."></div>
+        <div class="field"><label>Sitio web</label><input id="dj_web" class="ctrl" placeholder="www..."></div>
+      </div>
+
+      <!-- 2. REPRESENTANTE LEGAL -->
+      <h3 class="sectiontitle" style="margin-top:20px"><i class="fa-solid fa-id-badge"></i> 2. Representante Legal</h3>
+      <div class="formgrid">
+        <div class="field"><label>Apellidos y Nombres</label><input id="dj_rl_nombre" class="ctrl" placeholder="Nombres completos"></div>
+        <div class="field"><label>Tipo de Documento</label><select id="dj_rl_tipodoc" class="ctrl"><option>DNI</option><option>Carnet de Extranjería</option><option>Pasaporte</option></select></div>
+        <div class="field"><label>N° Documento</label><input id="dj_rl_doc" class="ctrl" placeholder="Número" oninput="lookupDniUbo(this)"></div>
+        <div class="field"><label>Nacionalidad</label><input id="dj_rl_nac" class="ctrl" value="Peruana"></div>
+      </div>
+
+      <!-- 3. BENEFICIARIOS FINALES (UBO) -->
+      <h3 class="sectiontitle" style="margin-top:20px"><i class="fa-solid fa-users"></i> 3. Beneficiarios Finales y Accionistas ≥ 10%</h3>
+      <div class="notice warning" style="font-size:10px;line-height:1.45;padding:10px 12px"><i class="fa-solid fa-circle-info"></i><span>Consignar únicamente personas naturales con participación directa o indirecta igual o mayor al 10%. Obligatorio según Decreto Legislativo 1372.</span></div>
+      <div id="dj_ubos">
+        <div class="dj-ubo-row formgrid" style="border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px">
+          <div class="field"><label>Apellidos y Nombres</label><input class="ctrl dj-ubo-nombre" placeholder="Persona natural"></div>
+          <div class="field"><label>Tipo Doc.</label><select class="ctrl dj-ubo-tipodoc"><option>DNI</option><option>CE</option><option>Pasaporte</option></select></div>
+          <div class="field"><label>N° Documento</label><input class="ctrl dj-ubo-doc" placeholder="Número" oninput="lookupDniUbo(this)"></div>
+          <div class="field"><label>Nacionalidad</label><input class="ctrl dj-ubo-nac" value="Peruana"></div>
+          <div class="field"><label>% Participación</label><input class="ctrl dj-ubo-pct" type="number" min="10" max="100" placeholder="10"></div>
+          <div class="field"><label>Vínculo con la empresa</label><select class="ctrl dj-ubo-vinculo"><option value="">Seleccionar...</option><option>Accionista</option><option>Director</option><option>Gerente</option><option>Gerente General</option><option>Titular Gerente</option><option>Apoderado</option><option>Socio</option><option>Otros</option></select></div>
+        </div>
+      </div>
+      <button class="btn bogray" style="height:34px;margin-bottom:4px" onclick="addUboRow()"><i class="fa-solid fa-plus"></i> Agregar beneficiario</button>
+
+      <!-- 4. CONFLICTO DE INTERESES -->
+      <h3 class="sectiontitle" style="margin-top:20px"><i class="fa-solid fa-scale-balanced"></i> 4. Conflicto de Intereses</h3>
+      <div class="formgrid">
+        <div class="field span2">
+          <label>¿Usted, su representante legal o algún integrante clave mantiene vínculo de consanguinidad (hasta 4° grado) o afinidad (hasta 2° grado) con algún colaborador, directivo o funcionario de VETA DORADA S.A.C.?</label>
+          <div style="display:flex;gap:16px;margin-top:8px">
+            <label style="display:flex;align-items:center;gap:6px;font-weight:700;cursor:pointer"><input type="radio" id="dj_ci_si" name="dj_ci" value="SI" onchange="toggleCiGrado(this)"> SÍ</label>
+            <label style="display:flex;align-items:center;gap:6px;font-weight:700;cursor:pointer"><input type="radio" id="dj_ci_no" name="dj_ci" value="NO" checked onchange="toggleCiGrado(this)"> NO</label>
+          </div>
+        </div>
+        <div class="field span2"><label>Grado de Parentesco / Afinidad (si aplica)</label><input id="dj_ci_grado" class="ctrl" placeholder="Especificar si respondió SÍ" disabled style="background:#f1f5f9;color:#94a3b8;cursor:not-allowed"></div>
+      </div>
+
+      <!-- 5. REFERENCIAS BANCARIAS -->
+      <h3 class="sectiontitle" style="margin-top:20px"><i class="fa-solid fa-building-columns"></i> 5. Referencias Bancarias y Política de Pagos</h3>
+      <div class="formgrid">
+        <div class="field"><label>Banco</label><input id="dj_banco" class="ctrl" placeholder="Nombre del banco"></div>
+        <div class="field"><label>Modalidad de Pago</label><select id="dj_pago_mod" class="ctrl"><option>Abono en cuenta</option><option>Cheque de gerencia</option></select></div>
+        <div class="field"><label>Tipo de Cuenta</label><select id="dj_cuenta_tipo" class="ctrl"><option>Cuenta Corriente</option><option>Cuenta de Ahorro</option></select></div>
+        <div class="field"><label>Moneda</label><select id="dj_moneda" class="ctrl"><option>Soles</option><option>Dólares</option></select></div>
+        <div class="field"><label>N° de Cuenta</label><input id="dj_cuenta_num" class="ctrl" placeholder="Número de cuenta"></div>
+        <div class="field"><label>N° Cuenta Interbancaria (CCI)</label><input id="dj_cci" class="ctrl" placeholder="20 dígitos"></div>
+      </div>
+
+      <!-- 6. CONTACTOS -->
+      <h3 class="sectiontitle" style="margin-top:20px"><i class="fa-solid fa-address-book"></i> 6. Contactos</h3>
+      <div class="formgrid">
+        <div class="field"><label>Contacto Comercial</label><input id="dj_c_comercial" class="ctrl" placeholder="Nombre"></div>
+        <div class="field"><label>Email Comercial</label><input id="dj_e_comercial" class="ctrl" type="email" placeholder="correo@empresa.com"></div>
+        <div class="field"><label>Contacto Facturación</label><input id="dj_c_factura" class="ctrl" placeholder="Nombre"></div>
+        <div class="field"><label>Email Facturación</label><input id="dj_e_factura" class="ctrl" type="email" placeholder="correo@empresa.com"></div>
+      </div>
+
+      <!-- 7. DECLARACIÓN JURADA -->
+      <div style="margin-top:20px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:12px;padding:12px 14px;font-size:10px;line-height:1.5;color:#1e3a8a;font-weight:600">
+        <i class="fa-solid fa-signature" style="margin-right:8px"></i>
+        El que suscribe, en condición de Representante Legal, <b>DECLARA BAJO JURAMENTO</b> que los datos consignados en esta solicitud son fiel expresión de la verdad, que la empresa no se encuentra en proceso de insolvencia o quiebra, que cumple con las leyes laborales, tributarias y ambientales aplicables, y que autoriza a <b>Minera Veta Dorada S.A.C.</b> a verificar la información proporcionada.
+      </div>
+      <div class="formgrid" style="margin-top:14px">
+        <div class="field"><label>Fecha de declaración</label><input id="dj_fecha" class="ctrl" type="date"></div>
+        <div class="field"><label>Lugar</label><input id="dj_lugar" class="ctrl" value="Lima"></div>
+      </div>
+    </div>
+    <div class="modalfoot" style="gap:10px">
+      <button class="btn bogray" onclick="closeModal('modalDJ')">Cancelar</button>
+      <button class="btn bblue" onclick="vistaPreviaDJ()"><i class="fa-solid fa-eye"></i> Vista Previa</button>
+      <button class="btn bgreen" onclick="saveDJ()"><i class="fa-solid fa-floppy-disk"></i> Guardar DJ</button>
+      <button id="btnGenerarPdfDJ" class="btn bvd" onclick="generarPdfDJ()" disabled style="opacity:.5;cursor:not-allowed"><i class="fa-solid fa-file-pdf"></i> Generar PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FLUJO DE POLITICAS SECUENCIAL -->
+<div id="modalPrivacidad" class="modalbg" style="background:rgba(0,0,0,.62)">
+  <div style="width:min(620px,92vw);max-height:90vh;background:#fff;border-radius:12px;display:flex;flex-direction:column;box-shadow:0 24px 70px rgba(0,0,0,.38);overflow:hidden">
+
+    <div style="padding:10px 14px 8px;text-align:center;flex-shrink:0">
+      <div id="polModalTitle" style="font-size:13px;font-weight:900;color:#111827">Política de Privacidad</div>
+      <div id="polStepLabel" style="display:none">Paso 1 de 3</div>
+    </div>
+
+    <div style="padding:0 14px 10px;flex:1;min-height:0">
+      <div id="polDocIcon" style="display:none"></div>
+      <div id="polDocTitle" style="display:none"></div>
+      <div id="polDocSub" style="display:none"></div>
+      <a id="polDocLink" href="#" target="_blank" style="display:none!important">Abrir documento</a>
+
+      <div id="polViewerWrap" style="border-radius:4px;overflow:hidden;border:1px solid #d1d5db;height:430px;background:#f8fafc;position:relative">
+        <iframe id="polFrame" style="width:100%;height:100%;border:0;display:block"></iframe>
+        <div id="polNoFrame" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#f8fafc;text-align:center;padding:24px">
+          <i class="fa-solid fa-file-lines" style="font-size:42px;color:#cbd5e1"></i>
+          <div style="font-size:14px;font-weight:900;color:var(--text)" id="polFallbackTitle"></div>
+          <div style="font-size:12px;color:var(--muted);font-weight:600;max-width:360px">Este documento no puede mostrarse en el navegador. Abra el documento y luego acepte para continuar.</div>
+        </div>
+        <div id="polComingSoon" style="display:none;position:absolute;inset:0;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#f8fafc;text-align:center;padding:24px">
+          <i class="fa-solid fa-clock" style="font-size:42px;color:#bfdbfe"></i>
+          <div style="font-size:16px;font-weight:900;color:var(--blue)">Próximamente</div>
+          <div style="font-size:13px;color:var(--muted);font-weight:600;max-width:340px">Este documento estará disponible en una próxima actualización.</div>
+        </div>
+      </div>
+
+      <div id="polStepper" style="display:flex;gap:8px;justify-content:center;align-items:center;margin:8px 0 0;flex-wrap:wrap"></div>
+    </div>
+
+    <div style="display:none">
+      <input type="checkbox" id="polCheck" onchange="onPolCheck()">
+      <span id="polCheckLabel">He leído y acepto este documento</span>
+    </div>
+
+    <div style="display:flex;gap:10px;padding:0 14px 14px;flex-shrink:0;justify-content:center">
+      <button class="btn bgreen" style="height:36px;min-width:110px" onclick="document.getElementById('polCheck').checked=true;onPolCheck();nextPolicy()">Acepto</button>
+      <button class="btn bred" style="height:36px;min-width:110px" onclick="rejectPrivacy()">No acepto</button>
+      <button id="polBtnNext" class="btn" style="display:none" disabled onclick="nextPolicy()"><span id="polBtnLabel">Acepto y continuar</span></button>
+    </div>
+
+  </div>
+</div>
+<!-- MODAL PREGUNTAS FRECUENTES -->
+<div id="modalFaq" class="modalbg">
+  <div class="modal" style="width:min(680px,96vw)">
+    <div class="modalhead">
+      <h2><i class="fa-solid fa-circle-question" style="color:var(--blue3);margin-right:8px"></i>Preguntas Frecuentes</h2>
+      <button class="xbtn" onclick="closeModal('modalFaq')">&times;</button>
+    </div>
+    <div class="modalbody" style="display:flex;flex-direction:column;gap:12px">
+
+      <details style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+        <summary style="padding:13px 16px;font-weight:900;cursor:pointer;background:var(--soft);list-style:none;display:flex;justify-content:space-between;align-items:center">
+          ¿Qué documentos debo cargar? <i class="fa-solid fa-chevron-down" style="font-size:12px;color:var(--muted)"></i>
+        </summary>
+        <div style="padding:13px 16px;font-size:13px;color:var(--slate);line-height:1.6;border-top:1px solid var(--line)">
+          Debes cargar los documentos del checklist: Consentimiento de datos, DOI por rol, Ficha RUC, Certificado literal (si aplica), Certificado Único Laboral (si aplica), Declaración Jurada, Reporte Tributario y Vigencia de Poder. Los marcados como <b>Obligatorio</b> son indispensables para enviar a revisión.
+        </div>
+      </details>
+
+      <details style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+        <summary style="padding:13px 16px;font-weight:900;cursor:pointer;background:var(--soft);list-style:none;display:flex;justify-content:space-between;align-items:center">
+          ¿Qué formatos de archivo están permitidos? <i class="fa-solid fa-chevron-down" style="font-size:12px;color:var(--muted)"></i>
+        </summary>
+        <div style="padding:13px 16px;font-size:13px;color:var(--slate);line-height:1.6;border-top:1px solid var(--line)">
+          Se aceptan archivos en formato <b>PDF, JPG y PNG</b>. El tamaño máximo por archivo es de <b>10 MB</b>. Los documentos tipo formulario deben completarse en la plataforma, generarse y cargarse firmados en PDF.
+        </div>
+      </details>
+
+      <details style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+        <summary style="padding:13px 16px;font-weight:900;cursor:pointer;background:var(--soft);list-style:none;display:flex;justify-content:space-between;align-items:center">
+          ¿Qué significa cada estado del documento? <i class="fa-solid fa-chevron-down" style="font-size:12px;color:var(--muted)"></i>
+        </summary>
+        <div style="padding:13px 16px;font-size:13px;color:var(--slate);line-height:1.6;border-top:1px solid var(--line)">
+          <b>Pendiente:</b> aún no se ha cargado el documento.<br>
+          <b>Cargado:</b> archivo recibido, en espera de revisión.<br>
+          <b>En revisión:</b> el equipo de compliance está validando el documento.<br>
+          <b>Observado:</b> el documento tiene comentarios; debe corregirse y volver a cargarse.<br>
+          <b>Aprobado:</b> documento validado correctamente.<br>
+          <b>Vencido:</b> la fecha de vigencia expiró; debe cargarse una versión actualizada.
+        </div>
+      </details>
+
+      <details style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+        <summary style="padding:13px 16px;font-weight:900;cursor:pointer;background:var(--soft);list-style:none;display:flex;justify-content:space-between;align-items:center">
+          ¿Qué es el proceso KYB? <i class="fa-solid fa-chevron-down" style="font-size:12px;color:var(--muted)"></i>
+        </summary>
+        <div style="padding:13px 16px;font-size:13px;color:var(--slate);line-height:1.6;border-top:1px solid var(--line)">
+          <b>KYB (Know Your Business)</b> es el proceso de debida diligencia con el que Minera Veta Dorada S.A.C. verifica la identidad, estructura societaria, beneficiarios finales (UBO), vínculos con personas políticamente expuestas (PEP) y ausencia en listas de sanciones internacionales. Es requisito obligatorio para operar como proveedor habilitado.
+        </div>
+      </details>
+
+      <details style="border:1px solid var(--line);border-radius:10px;overflow:hidden">
+        <summary style="padding:13px 16px;font-weight:900;cursor:pointer;background:var(--soft);list-style:none;display:flex;justify-content:space-between;align-items:center">
+          ¿A quién contacto si tengo problemas? <i class="fa-solid fa-chevron-down" style="font-size:12px;color:var(--muted)"></i>
+        </summary>
+        <div style="padding:13px 16px;font-size:13px;color:var(--slate);line-height:1.6;border-top:1px solid var(--line)">
+          Comunícate con tu <b>gestor del área de Logística</b> de Minera Veta Dorada S.A.C. a través del correo indicado en tu carta de invitación.
+        </div>
+      </details>
+
+    </div>
+    <div class="modalfoot"><button class="btn bogray" onclick="closeModal('modalFaq')">Cerrar</button></div>
+  </div>
+</div>
+
+<input id="hiddenFile" class="hide" type="file" onchange="handleHiddenFile(this)">
+<div id="toast" class="toast"></div>
+<div id="modalPreview" class="modalbg"><div class="modal"><div class="mh"><h2 id="previewDocTitle">Vista previa</h2><button class="close" onclick="closeModal('modalPreview')"><i class="fa-solid fa-xmark"></i></button></div><div class="mbody" style="padding:12px"><div id="previewDocContent"></div></div></div></div>
+<div id="modalRegistroExistente" class="modalbg" style="background:rgba(15,23,42,.45)">
+  <div class="modal" style="width:min(420px,92vw);border-radius:12px;padding:22px 24px;text-align:center;position:relative">
+    <button class="xbtn" onclick="closeModal('modalRegistroExistente')" style="position:absolute;right:10px;top:8px;background:transparent;font-size:18px">&times;</button>
+    <div style="font-size:17px;font-weight:900;color:#111827;margin-bottom:12px">Ya tiene un registro en proceso</div>
+    <div style="font-size:14px;color:#475569;line-height:1.45;margin-bottom:20px">&iquest;Desea iniciar uno nuevo y anular el anterior, o continuar con el previo?</div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bgreen" onclick="continuePreviousRegistration()" style="min-width:145px;justify-content:center">Seguir con previo</button>
+      <button class="btn" onclick="startNewAndCancelPrevious()" style="min-width:145px;justify-content:center;background:#dc2626;color:#fff;border-color:#dc2626">Nuevo y anular</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const allowedSimple='.pdf,.jpg,.jpeg,.png';
+const records=[];
+const docs=[
+ {id:'consent',icon:'fa-file-signature',title:'Consentimiento de Tratamiento de Datos Personales',short:'Formulario web, documento para firma y carga del firmado.',kind:'form',required:true,modal:'modalConsent',types:'PDF firmado',status:'PENDIENTE',phase:'Formulario pendiente',file:'',date:'',expiry:'',obs:'Pendiente de completar formulario.'},
+ {id:'doi',icon:'fa-id-card',title:'Copia del Documento Obligatorio de Identidad Vigente',short:'Documento por rol: representante, accionista, socio y beneficiario final.',kind:'roles',required:true,types:'PDF, JPG, PNG',status:'PENDIENTE',obs:'Cargar documento vigente por cada rol aplicable.'},
+ {id:'ruc',icon:'fa-building',title:'Ficha RUC actualizada',short:'Documento simple de sustento del RUC o registro tributario.',kind:'simple',required:true,types:'PDF',status:'PENDIENTE',file:'',date:'',expiry:'',obs:''},
+ {id:'literal',icon:'fa-scroll',title:'Certificado literal / Partida registral',short:'Documento societario vigente, cuando aplique.',kind:'simple',required:false,types:'PDF',status:'PENDIENTE',file:'',date:'',expiry:'',obs:'Opcional según tipo de proveedor.'},
+ {id:'cul',icon:'fa-certificate',title:'Certificado Único Laboral',short:'Documento por rol, cuando corresponda a personas naturales vinculadas.',kind:'roles',required:false,types:'PDF',status:'PENDIENTE',obs:'Aplica según rol y requerimiento.'},
+ {id:'dj',icon:'fa-file-contract',title:'Declaración Jurada de Conocimiento del Proveedor',short:'Complete el formulario digital, genere el PDF, imprímalo con firma y sello, luego cárguelo.',kind:'form',required:true,modal:'modalDJ',types:'PDF firmado',status:'PENDIENTE',phase:'Formulario pendiente',file:'',date:'',expiry:'',obs:'Pendiente de completar formulario web.'},
+ {id:'tributario',icon:'fa-chart-line',title:'Reporte Tributario a la Fecha',short:'Reporte tributario actualizado del proveedor.',kind:'simple',required:true,types:'PDF',status:'PENDIENTE',file:'',date:'',expiry:'',obs:''},
+ {id:'vigencia',icon:'fa-gavel',title:'Vigencia de Poder',short:'Documento de facultades del representante legal.',kind:'simple',required:true,types:'PDF',status:'PENDIENTE',file:'',date:'',expiry:'',obs:''}
+];
+const roleOpciones=['Representante Legal','Accionista','Socio','Beneficiario Final','Otro'];
+/* roleRows: array dinámico de filas por documento de roles */
+const roleRows={
+  doi:[
+    {role:'Representante Legal',file:'',date:'',status:'PENDIENTE'},
+    {role:'Accionista',file:'',date:'',status:'PENDIENTE'},
+    {role:'Socio',file:'',date:'',status:'PENDIENTE'},
+    {role:'Beneficiario Final',file:'',date:'',status:'PENDIENTE'}
+  ],
+  cul:[
+    {role:'Representante Legal',file:'',date:'',status:'PENDIENTE'},
+    {role:'Accionista',file:'',date:'',status:'PENDIENTE'},
+    {role:'Socio',file:'',date:'',status:'PENDIENTE'},
+    {role:'Beneficiario Final',file:'',date:'',status:'PENDIENTE'}
+  ]
+};
+const openRoleAccordions=new Set();
+/* Compatibilidad retroactiva */
+const roles=['Representante Legal','Accionista','Socio','Beneficiario Final'];
+const roleDocs={doi:{},cul:{}};
+let selectedDoc='consent';
+let uploadTarget=null;
+let inductionOk=false;
+
+/* ── NAVEGACIÓN PÚBLICA (login / registro) ── */
+function showPubScreen(id){
+  document.querySelectorAll('.pub-screen').forEach(s=>s.style.display='none');
+  document.getElementById(id).style.display='block';
+  window.scrollTo(0,0);
+  if(id==='screenRecover'){
+    document.getElementById('recoverForm').style.display='block';
+    document.getElementById('recoverOk').style.display='none';
+    document.getElementById('recRuc').value='';
+    document.getElementById('recEmail').value='';
+  }
+}
+
+/* ── NAVEGACIÓN GLOBAL login ↔ app ── */
+function showLogin(){
+  document.getElementById('appView').style.display='none';
+  document.getElementById('loginView').style.display='block';
+  showPubScreen('screenLogin');
+  window.scrollTo(0,0);
+}
+function showApp(){
+  document.getElementById('loginView').style.display='none';
+  document.getElementById('appView').style.display='block';
+  window.scrollTo(0,0);
+}
+
+let providerName='';
+let providerRuc='';
+let providerEmail='';
+let kybStatus='KYB Pendiente';
+let providerType='juridica'; // 'juridica' | 'natural'
+
+const DOCS_NATURAL=['consent','doi','ruc','cul','tributario','dj'];
+
+function detectProviderType(ruc){
+  const first=(ruc||'').trim().charAt(0);
+  return first==='1'?'natural':'juridica';
+}
+
+function getActiveDocs(){
+  if(providerType==='natural') return docs.filter(d=>DOCS_NATURAL.includes(d.id));
+  return docs;
+}
+
+function providerTypeLabel(){
+  return providerType==='natural'
+    ? '<span class="chip chip-blue" style="font-size:11px"><i class="fa-solid fa-user"></i> Persona Natural</span>'
+    : '<span class="chip chip-amber" style="font-size:11px"><i class="fa-solid fa-building"></i> Persona Jurídica</span>';
+}
+
+function getProviderName(){
+  return (document.getElementById('regName')?.value||'').trim();
+}
+
+function resetRecords(){records.length=0;}
+function seedExistingProviderDemo(){
+  resetRecords();
+  records.push({item:1240,codigo:'REG-2026-001240',estado:'EN REVISIÓN',fecha:'16/06/2026'});
+  kybStatus='KYB Verificado';
+}
+function seedNewProviderAccount(){
+  resetRecords();
+  kybStatus='KYB Pendiente';
+}
+
+function updateHomeGreeting(){
+  const name=providerName||getProviderName();
+  const g=document.getElementById('homeGreeting');
+  const rs=document.getElementById('homeRazonSocial');
+  if(name){
+    g.textContent='¡Bienvenido al portal!';
+    rs.textContent=name;
+    rs.style.display='block';
+  } else {
+    g.textContent='¡Bienvenido!';
+    rs.style.display='none';
+  }
+}
+
+function doLogin(){
+  providerRuc=(document.getElementById('loginRuc')?.value||'').trim();
+  providerType=detectProviderType(providerRuc);
+  providerName=getProviderName()||('PROVEEDOR '+(providerRuc||'000000000001'));
+  providerEmail='proveedor@empresa.com';
+  seedExistingProviderDemo();
+  inductionOk=true;
+  updateHomeGreeting();
+  const dr=document.getElementById('docsRuc');if(dr)dr.textContent=providerRuc||'000000000001';
+  showApp();
+  showScreen('screenHome');
+}
+function sendRecover(){
+  const ruc=(document.getElementById('recRuc').value||'').trim();
+  const email=(document.getElementById('recEmail').value||'').trim();
+  if(!ruc||!email){notify('Completa el RUC y el correo para continuar.');return;}
+  document.getElementById('recoverForm').style.display='none';
+  document.getElementById('recoverOk').style.display='block';
+}
+/* ══════════════════════════════════════════
+   FLUJO SECUENCIAL DE POLÍTICAS
+   ══════════════════════════════════════════ */
+const policyDocs=[
+  {
+    title:'Política de Privacidad',
+    sub:'Tratamiento de Datos Personales — Proveedores de Bienes y Servicios',
+    icon:'fa-shield-halved', iconBg:'#dbeafe', iconColor:'#1d4ed8',
+    url:'/assets/POLITICA_DE_PRIVACIDAD_MVD.pdf',
+    isPdf:true, comingSoon:false
+  },
+  {
+    title:'Código de Conducta de Dynacor',
+    sub:'Normas de conducta y ética empresarial para proveedores',
+    icon:'fa-book-open', iconBg:'#dcfce7', iconColor:'#16a34a',
+    url:null, isPdf:false, comingSoon:false, pending:true
+  },
+  {
+    title:'Política de Derechos Humanos',
+    sub:'Compromisos con los derechos fundamentales de las personas',
+    icon:'fa-handshake', iconBg:'#ede9fe', iconColor:'#7c3aed',
+    url:null, isPdf:false, comingSoon:false, pending:true
+  },
+  {
+    title:'Política Anticorrupción',
+    sub:'Próximamente disponible en la plataforma',
+    icon:'fa-scale-balanced', iconBg:'#f1f5f9', iconColor:'#94a3b8',
+    url:null, isPdf:false, comingSoon:true
+  }
+];
+let polStep=0;
+
+let regLookupTimer=null;
+let regLookupLast='';
+
+function setRegLookupHint(text,type=''){
+  const hint=document.getElementById('regLookupHint');
+  if(!hint)return;
+  hint.textContent=text||'';
+  hint.className='lookup-hint'+(type?' '+type:'');
+}
+
+async function lookupRegistrationDocument(){
+  const docEl=document.getElementById('regRuc');
+  const nameEl=document.getElementById('regName');
+  if(!docEl||!nameEl)return;
+  const numero=(docEl.value||'').replace(/\D/g,'').slice(0,11);
+  docEl.value=numero;
+  clearTimeout(regLookupTimer);
+
+  if(!numero){nameEl.value='';nameEl.placeholder='';regLookupLast='';setRegLookupHint('');return;}
+  if(numero.length!==8&&numero.length!==11){nameEl.value='';nameEl.placeholder='';regLookupLast='';setRegLookupHint('');return;}
+  if(numero===regLookupLast)return;
+
+  regLookupTimer=setTimeout(async()=>{
+    regLookupLast=numero;
+    const isRuc=numero.length===11;
+    const endpoint=isRuc?'/api/ruc?numero=':'/api/dni?numero=';
+    setRegLookupHint(isRuc?'Consultando RUC...':'Consultando DNI...');
+    nameEl.placeholder='';
+    try{
+      const res=await fetch(endpoint+encodeURIComponent(numero),{cache:'no-store'});
+      const data=await res.json().catch(()=>({}));
+      const value=isRuc?(data.razonSocial||data.razon_social||data.nombre):(data.nombre||data.nombreCompleto||data.nombre_completo);
+      if(res.ok&&data.ok&&value){
+        nameEl.value=String(value).trim().toUpperCase();
+        setRegLookupHint('');
+      }else{
+        setRegLookupHint(isRuc?'No se pudo obtener la razon social. Puede escribirla manualmente.':'No se pudo obtener el nombre. Puede escribirlo manualmente.','warn');
+      }
+    }catch(e){
+      setRegLookupHint('No se pudo consultar el API. Puede completar el nombre manualmente.','err');
+    }
+  },450);
+}
+
+function initRegistrationLookup(){
+  const docEl=document.getElementById('regRuc');
+  if(!docEl)return;
+  docEl.addEventListener('input',lookupRegistrationDocument);
+  docEl.addEventListener('blur',lookupRegistrationDocument);
+}
+
+function createAccount(){
+  const ruc=(document.getElementById('regRuc').value||'').trim();
+  const name=(document.getElementById('regName').value||'').trim();
+  const email=(document.getElementById('regEmail').value||'').trim();
+  if(!ruc||!name||!email){notify('Completa todos los campos para continuar.');return;}
+  polStep=0;
+  openModal('modalPrivacidad');
+  renderPolicyStep();
+}
+
+function renderPolicyStep(){
+  const doc=policyDocs[polStep];
+  const total=policyDocs.filter(d=>!d.comingSoon).length;
+  const realStep=polStep+1;
+
+  /* Lista simple al pie */
+  const stepper=document.getElementById('polStepper');
+  stepper.innerHTML=policyDocs.map((d,i)=>{
+    const active=i===polStep;
+    const done=i<polStep;
+    const label=d.title.length>24?d.title.slice(0,22)+'…':d.title;
+    return `<div style="font-size:10px;font-weight:900;max-width:138px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:${active?'#0067AC':done?'#15803d':'#64748b'};border-bottom:2px solid ${active?'#0067AC':'transparent'};padding:3px 2px;text-align:center">
+      ${done?'<i class="fa-solid fa-check" style="font-size:9px"></i> ':''}${d.comingSoon?'<i class="fa-solid fa-clock" style="font-size:9px"></i> ':''}${label}
+    </div>`;
+  }).join('');
+
+  document.getElementById('polStepLabel').textContent=
+    doc.comingSoon ? 'Próximamente' : `Paso ${realStep} de ${total}`;
+  document.getElementById('polModalTitle').textContent=doc.title;
+
+  /* Ícono y textos */
+  const iconEl=document.getElementById('polDocIcon');
+  iconEl.innerHTML=`<i class="fa-solid ${doc.icon}"></i>`;
+  iconEl.style.background=doc.iconBg;
+  iconEl.style.color=doc.iconColor;
+  document.getElementById('polDocTitle').textContent=doc.title;
+  document.getElementById('polDocSub').textContent=doc.sub;
+
+  /* Enlace abrir documento */
+  const link=document.getElementById('polDocLink');
+  if(doc.url){link.href=doc.url;} link.style.display='none';
+
+  /* Visor */
+  const frame=document.getElementById('polFrame');
+  const noFrame=document.getElementById('polNoFrame');
+  const comingSoonEl=document.getElementById('polComingSoon');
+  frame.style.display='none'; noFrame.style.display='none'; comingSoonEl.style.display='none';
+
+  if(doc.comingSoon){
+    comingSoonEl.style.display='flex';
+  } else if(doc.pending){
+    comingSoonEl.style.display='flex';
+    comingSoonEl.querySelector('div:last-child').textContent='El documento está en preparación y será cargado próximamente. Puedes aceptar para continuar el registro.';
+  } else if(doc.isPdf && doc.url){
+    frame.src=doc.url+'#zoom=page-fit&view=FitH&navpanes=0'; frame.style.display='block';
+  } else {
+    noFrame.style.display='flex';
+    document.getElementById('polFallbackTitle').textContent=doc.title;
+  }
+
+  /* Checkbox y botón */
+  const chk=document.getElementById('polCheck');
+  chk.checked=false;
+  const isLast=polStep===policyDocs.length-1;
+  const prevIsSoon=polStep>0 && policyDocs[polStep-1].comingSoon;
+
+  document.getElementById('polCheckLabel').textContent=
+    doc.comingSoon ? 'He tomado nota de este documento próximo' : 'He leído y acepto este documento';
+  document.getElementById('polBtnLabel').textContent=
+    isLast ? 'Finalizar y registrarme' : 'Acepto y continuar';
+
+  const btn=document.getElementById('polBtnNext');
+  btn.disabled=true; btn.style.background='#94a3b8'; btn.style.cursor='not-allowed';
+}
+
+function onPolCheck(){
+  const chk=document.getElementById('polCheck').checked;
+  const btn=document.getElementById('polBtnNext');
+  btn.disabled=!chk;
+  btn.style.background=chk?'#16a34a':'#94a3b8';
+  btn.style.cursor=chk?'pointer':'not-allowed';
+}
+
+function nextPolicy(){
+  if(polStep<policyDocs.length-1){
+    polStep++;
+    document.getElementById('polCheck').checked=false;
+    renderPolicyStep();
+  } else {
+    /* todos aceptados → continuar */
+    closeModal('modalPrivacidad');
+    providerRuc=(document.getElementById('regRuc')?.value||'').trim();
+    providerType=detectProviderType(providerRuc);
+    providerName=(document.getElementById('regName')?.value||'').trim();
+    providerEmail=(document.getElementById('regEmail')?.value||'').trim();
+    seedNewProviderAccount();
+    updateHomeGreeting();
+    const dr=document.getElementById('docsRuc');if(dr)dr.textContent=providerRuc||'000000000001';
+    showApp();
+    showScreen('screenHome');
+    openModal('modalVideo');
+    notify('Cuenta creada. Revise la inducción para continuar.');
+  }
+}
+
+function rejectPrivacy(){
+  closeModal('modalPrivacidad');
+  notify('Debes aceptar todos los documentos para registrarte.');
+}
+
+function acceptPrivacy(){ nextPolicy(); }
+function doLogout(){
+  document.querySelectorAll('.modalbg.open').forEach(m=>m.classList.remove('open'));
+  showLogin();
+  document.getElementById('loginPass').value='';
+  setTimeout(()=>document.getElementById('loginRuc').focus(),80);
+  notify('Sesión cerrada correctamente.');
+}
+
+/* ── NAVEGACIÓN INTERNA DE LA APP ── */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  renderAll();
+}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+function notify(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.style.display='none',2600)}
+function toggleDark(){
+  document.body.classList.toggle('dark');
+  const dark=document.body.classList.contains('dark');
+  document.querySelectorAll('.theme-toggle').forEach(b=>b.textContent=dark?'Modo Claro':'Modo Oscuro');
+  const btn=document.getElementById('darkBtn');
+  if(btn)btn.innerHTML=dark?'<i class="fa-solid fa-sun"></i> Modo Claro':'<i class="fa-solid fa-moon"></i> Modo Oscuro';
+}
+function todayIso(){const d=new Date();return d.toISOString().slice(0,10)}
+function todayPe(){const d=new Date();return d.toLocaleDateString('es-PE')}
+function stateClass(s){const k=(s||'').toUpperCase();if(k==='APROBADO')return 'st-aprobado';if(k==='CARGADO')return 'st-cargado';if(k==='EN REVISIÓN')return 'st-revision';if(k==='OBSERVADO')return 'st-observado';if(k==='RECHAZADO')return 'st-rechazado';if(k==='VENCIDO')return 'st-vencido';if(k==='NO APLICA')return 'st-noaplica';return 'st-pendiente'}
+function chipByState(s){const k=(s||'').toUpperCase();if(k==='APROBADO')return 'chip-green';if(k==='OBSERVADO'||k==='RECHAZADO'||k==='VENCIDO')return 'chip-red';if(k==='EN REVISIÓN')return 'chip-amber';if(k==='CARGADO')return 'chip-blue';return 'chip-soft'}
+function docById(id){return docs.find(d=>d.id===id)}
+function setKybStatus(status){
+  kybStatus=status||'KYB Pendiente';
+  const chip=document.getElementById('kybStatusChip');
+  if(!chip)return;
+  const isVerified=kybStatus==='KYB Verificado';
+  const isSuspended=kybStatus==='KYB Suspendido';
+  chip.className='chip '+(isVerified?'chip-blue':isSuspended?'chip-red':'chip-soft');
+  chip.style.fontSize='11px';
+  chip.style.gap='5px';
+  chip.innerHTML='<i class="fa-solid fa-shield-halved"></i> '+kybStatus;
+}
+function updateProviderProfile(){
+  const c=countStates();
+  const current=records[0]||null;
+  const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
+  set('profileRuc',providerRuc||'');
+  set('profileName',providerName||'');
+  set('profileType','Proveedor de bienes y servicios');
+  set('profileEmail',providerEmail||'');
+  set('profileDate',todayPe());
+  setKybStatus(kybStatus);
+  const st=document.getElementById('profileDocsStatus');
+  if(st){
+    const status=current?current.estado:'PENDIENTE';
+    st.textContent=status;
+    st.className='chip '+chipByState(status);
+  }
+}
+function ensureDraftRecord(){
+  if(records.length)return records[0];
+  const r={item:1240,codigo:'REG-2026-001240',estado:'PENDIENTE',fecha:todayPe()};
+  records.push(r);
+  return r;
+}
+function isComplete(d){return ['CARGADO','EN REVISIÓN','APROBADO','NO APLICA'].includes(d.status)}
+function countStates(){const active=getActiveDocs();const data={aprobado:0,revision:0,observado:0,pendiente:0,cargado:0,complete:0,total:active.length};active.forEach(d=>{if(d.status==='APROBADO')data.aprobado++;else if(d.status==='EN REVISIÓN')data.revision++;else if(d.status==='OBSERVADO')data.observado++;else if(d.status==='CARGADO')data.cargado++;else if(d.status==='PENDIENTE')data.pendiente++;if(isComplete(d))data.complete++});return data}
+function renderRecords(){const q=(document.getElementById('searchInput')?.value||'').toLowerCase();const f=document.getElementById('stateFilter')?.value||'';const c=countStates();const tbody=document.getElementById('recordRows');if(!tbody)return;tbody.innerHTML=records.filter(r=>(!q||(r.codigo+' '+r.estado+' '+r.fecha).toLowerCase().includes(q))&&(!f||r.estado===f)).map(r=>`<tr>
+<td><b>${r.item}</b></td><td><b>${r.codigo}</b></td><td><span class="chip ${chipByState(r.estado)}">${r.estado}</span></td><td>${r.fecha}</td>
+<td>${c.aprobado}</td><td>${c.revision}</td><td>${c.observado}</td><td>${c.pendiente}</td>
+<td><button class="btnshow" onclick="showScreen('screenDocs')"><i class="fa-solid fa-folder-open"></i> Abrir registro</button></td>
+</tr>`).join('')||'<tr><td colspan="9" style="padding:22px;color:var(--muted)">No se encontraron registros.</td></tr>'}
+function renderChecklist(){/* replaced by renderDocList */}
+function renderDocDetail(){/* replaced by renderDocList */}
+function selectDoc(id){selectedDoc=id;}
+
+const roleColors=['rc-red','rc-yel','rc-blue','rc-green'];
+const roleIconColors=['#dc2626','#92400e','#1d4ed8','#166534'];
+
+function renderDocList(){
+  const box=document.getElementById('docRows');if(!box)return;
+  /* actualizar subtítulo con tipo de proveedor */
+  const sub=document.getElementById('docsSubtitle');
+  if(sub)sub.innerHTML=`${providerTypeLabel()} &nbsp;·&nbsp; RUC: ${providerRuc||'000000000001'} &nbsp;·&nbsp; Cargue cada documento requerido para completar su registro.`;
+  const activeDocs=getActiveDocs();
+  box.innerHTML=activeDocs.map(d=>{
+    const meta=`${d.required?'<span style="color:#dc2626;font-weight:800">Obligatorio</span>':'<span style="color:#64748b">Condicional</span>'} · ${d.types}${d.date?' · Fecha: '+d.date:''}${d.file?' · <span style="color:var(--green);font-weight:700"><i class="fa-solid fa-paperclip"></i> '+d.file+'</span>':''}`;
+    let extra='';
+    if(d.kind==='roles'){
+      const rows=roleRows[d.id]||[];
+      const roleColor=(role)=>{
+        if(role==='Representante Legal') return 'background:#fff5f5;border-left:4px solid #dc2626';
+        if(role==='Accionista')          return 'background:#fffdf0;border-left:4px solid #f59e0b';
+        if(role==='Socio')               return 'background:#eff6ff;border-left:4px solid #2563eb';
+        if(role==='Beneficiario Final')  return 'background:#f0fdf4;border-left:4px solid #16a34a';
+        return 'background:var(--soft);border-left:4px solid #94a3b8';
+      };
+      extra=`<div id="roleList_${d.id}" style="margin-top:10px;display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden">
+        ${rows.map((r,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);flex-wrap:wrap;${roleColor(r.role)}">
+          <select class="ctrl" style="height:34px;width:180px;flex-shrink:0" onchange="roleRows['${d.id}'][${i}].role=this.value;renderAll()">
+            ${roleOpciones.map(o=>`<option${o===r.role?' selected':''}>${o}</option>`).join('')}
+          </select>
+          <span style="font-size:12px;color:var(--muted);font-weight:600;flex:1;min-width:120px">${r.file||'Sin archivo'}</span>
+          ${d.id==='cul'?`<label style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted);font-weight:600;flex-shrink:0;white-space:nowrap">Fecha emisión documento <input type="date" style="height:34px;border:1px solid #d1d5db;border-radius:8px;padding:0 8px;font-size:12px;width:150px;flex-shrink:0" value="${r.date}" onchange="roleRows['${d.id}'][${i}].date=this.value"></label>`:`<input type="date" style="height:34px;border:1px solid #d1d5db;border-radius:8px;padding:0 8px;font-size:12px;width:150px;flex-shrink:0" value="${r.date}" onchange="roleRows['${d.id}'][${i}].date=this.value">`}
+          <button class="round-btn rb" style="width:34px;height:34px;font-size:13px;flex-shrink:0" onclick="triggerRoleRowUpload('${d.id}',${i})" title="Cargar archivo"><i class="fa-solid fa-upload"></i></button>
+          <button class="round-btn rg" style="width:34px;height:34px;font-size:13px;flex-shrink:0" onclick="viewRoleRow('${d.id}',${i})" title="Ver archivo"><i class="fa-solid fa-eye"></i></button>
+          <span class="mini-status ${stateClass(r.status)}" style="font-size:10px;height:24px;padding:0 8px;flex-shrink:0">${r.status}</span>
+          ${r.role==='Representante Legal'?'<div style="width:28px;flex-shrink:0"></div>':`<button onclick="removeRoleRow('${d.id}',${i})" style="width:28px;height:28px;border-radius:50%;border:0;background:#fee2e2;color:#dc2626;cursor:pointer;display:grid;place-items:center;font-size:12px;flex-shrink:0" title="Eliminar fila"><i class="fa-solid fa-xmark"></i></button>`}
+        </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn bogray" style="height:34px" onclick="addRoleRow('${d.id}')"><i class="fa-solid fa-plus"></i> Agregar persona</button>
+        <button class="btn bblue" style="height:34px" onclick="saveRoleRows('${d.id}')"><i class="fa-solid fa-check"></i> Guardar</button>
+      </div>`;
+    }
+    if(d.kind==='roles'){
+      const cargados=roleRows[d.id].filter(r=>r.file).length;
+      const resumen=cargados?`<span style="color:var(--green);font-weight:700;font-size:12px"><i class="fa-solid fa-paperclip"></i> ${cargados} archivo${cargados>1?'s':''} cargado${cargados>1?'s':''}</span>`:'<span style="color:var(--muted);font-size:12px">Sin archivos cargados</span>';
+      const isOpen=openRoleAccordions.has(d.id);
+      return `<div class="docrow" style="flex-direction:column;align-items:stretch;padding:0">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer" onclick="toggleAccordion('acc_${d.id}')">
+          <div class="doc-icon"><i class="fa-solid ${d.icon}"></i></div>
+          <div style="flex:1;min-width:0">
+            <div class="doc-title">${d.title}</div>
+            <div class="doc-meta">${d.required?'<span style="color:#dc2626;font-weight:800">Obligatorio</span>':'<span style="color:#64748b">Condicional</span>'} · ${d.types} &nbsp;${resumen}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:9px;flex-shrink:0;min-width:220px;justify-content:flex-end" onclick="event.stopPropagation()">
+            <button id="chevron_${d.id}" class="round-btn rb" style="width:38px;height:38px;background:${isOpen?'#0067ac':'var(--blue)'};transform:${isOpen?'rotate(180deg)':''}" onclick="toggleAccordion('acc_${d.id}')" title="Desplegar / Comprimir"><i class="fa-solid fa-table-list"></i></button>
+            <button class="round-btn rg" style="width:38px;height:38px" onclick="event.stopPropagation();viewAllRoleDocs('${d.id}')" title="Vista previa de todos los documentos"><i class="fa-solid fa-eye"></i></button>
+            <span class="mini-status ${stateClass(d.status)}">${d.status}</span>
+          </div>
+        </div>
+        <div id="acc_${d.id}" style="display:${isOpen?'block':'none'};padding:0 20px 16px;border-top:1px solid var(--line)">
+          ${extra}
+        </div>
+      </div>`;
+    }
+    return `<div class="docrow">
+      <div style="display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0">
+        <div class="doc-icon"><i class="fa-solid ${d.icon}"></i></div>
+        <div style="flex:1;min-width:0">
+          <div class="doc-title">${d.title}</div>
+          <div class="doc-meta">${meta}</div>
+        </div>
+      </div>
+      <div class="doc-acts" style="min-width:220px;justify-content:flex-end">
+        ${d.kind==='form'?`<button class="round-btn" style="background:var(--blue2)" onclick="openModal('${d.modal}')" title="Completar formulario"><i class="fa-solid fa-pen-to-square"></i></button>`:''}
+        <button class="round-btn rb" onclick="triggerUpload('${d.id}')" title="Cargar archivo"><i class="fa-solid fa-upload"></i></button>
+        <button class="round-btn rg" onclick="viewFile('${d.id}')" title="Ver archivo"><i class="fa-solid fa-eye"></i></button>
+        ${d.file?`<button class="round-btn rr" onclick="deleteFile('${d.id}')" title="Eliminar"><i class="fa-solid fa-trash"></i></button>`:''}
+        <span class="mini-status ${stateClass(d.status)}">${d.status}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderProgress(){
+  const pb=document.getElementById('progressBar');if(!pb)return;
+  const c=countStates();const pct=Math.round((c.complete/c.total)*100);
+  pb.style.width=pct+'%';
+  const pt=document.getElementById('progressText');if(pt)pt.textContent=`${c.complete} de ${c.total} completos · ${pct}%`;
+  const ds=document.getElementById('detailStatus');if(ds){const current=records[0]||{estado:'PENDIENTE'};ds.textContent=current.estado;ds.className='chip '+chipByState(current.estado);}
+  const ca=document.getElementById('cntAprobado');if(ca)ca.textContent=c.aprobado;
+  const cr=document.getElementById('cntRevision');if(cr)cr.textContent=c.revision;
+  const co=document.getElementById('cntObservado');if(co)co.textContent=c.observado;
+  const cp=document.getElementById('cntPendiente');if(cp)cp.textContent=c.pendiente;
+}
+function renderHistory(d){return '';}
+function renderFormDoc(d){return '';}
+function renderSimpleDoc(d){return '';}
+function renderRolesDoc(d){return '';}
+function updateField(id,key,value){const d=docById(id);d[key]=value;if(key==='expiry'&&value){const now=todayIso();if(value<now){d.status='VENCIDO';d.obs='Documento vencido. Debe cargar una versión vigente.';notify('El documento está vencido.')}}renderAll()}
+function updateRole(docId,role,key,value){roleDocs[docId][role][key]=value;renderAll()}
+function triggerUpload(id){uploadTarget={type:'doc',id};const input=document.getElementById('hiddenFile');input.value='';input.accept=allowedSimple;input.click()}
+function triggerRoleUpload(docId,role){uploadTarget={type:'role',docId,role};const input=document.getElementById('hiddenFile');input.value='';input.accept=allowedSimple;input.click()}
+function triggerRoleRowUpload(docId,idx){uploadTarget={type:'roleRow',docId,idx};const input=document.getElementById('hiddenFile');input.value='';input.accept=allowedSimple;input.click()}
+function toggleAccordion(id){
+  const el=document.getElementById(id);if(!el)return;
+  const docId=id.replace('acc_','');
+  const open=el.style.display==='block';
+  if(open)openRoleAccordions.delete(docId);else openRoleAccordions.add(docId);
+  el.style.display=open?'none':'block';
+  const btn=document.getElementById('chevron_'+docId);
+  if(btn){btn.style.background=open?'var(--blue)':'#0067ac';btn.style.transform=open?'':'rotate(180deg)';}
+}
+function addRoleRow(docId){
+  roleRows[docId].push({role:'Accionista',file:'',date:'',status:'PENDIENTE'});
+  openRoleAccordions.add(docId);
+  renderAll();
+}
+function removeRoleRow(docId,idx){
+  if(roleRows[docId].length<=1){notify('Debe quedar al menos una fila.');return;}
+  roleRows[docId].splice(idx,1);
+  openRoleAccordions.add(docId);
+  renderAll();
+}
+function saveRoleRows(docId){
+  const any=roleRows[docId].some(r=>r.file);
+  if(!any){notify('Debe cargar al menos un archivo.');return;}
+  docById(docId).status='CARGADO';
+  docById(docId).file='Carga por roles registrada';
+  notify('Roles guardados correctamente.');
+  openRoleAccordions.delete(docId);
+  renderAll();
+}
+function handleHiddenFile(input){
+  const file=input.files[0];if(!file)return;
+  if(file.size>10*1024*1024){notify('El archivo supera el tamaño máximo permitido.');return;}
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(!['pdf','jpg','jpeg','png','docx','xlsx'].includes(ext)){notify('Formato de archivo no permitido.');return;}
+  const blobUrl=URL.createObjectURL(file);
+  if(uploadTarget?.type==='doc'){
+    const d=docById(uploadTarget.id);
+    if(d.blobUrl)URL.revokeObjectURL(d.blobUrl);
+    d.file=file.name;d.blobUrl=blobUrl;d.fileExt=ext;
+    d.status='CARGADO';d.phase=d.kind==='form'?'Firmado cargado':d.phase||'';
+    d.date=d.date||todayIso();
+    notify('Archivo cargado: '+file.name);
+  } else if(uploadTarget?.type==='roleRow'){
+    const r=roleRows[uploadTarget.docId][uploadTarget.idx];
+    if(r.blobUrl)URL.revokeObjectURL(r.blobUrl);
+    r.file=file.name;r.blobUrl=blobUrl;r.fileExt=ext;r.status='CARGADO';r.date=r.date||todayIso();
+    notify('Archivo cargado: '+file.name);
+  } else if(uploadTarget?.type==='role'){
+    const r=roleDocs[uploadTarget.docId]?.[uploadTarget.role];
+    if(r){if(r.blobUrl)URL.revokeObjectURL(r.blobUrl);r.file=file.name;r.blobUrl=blobUrl;r.fileExt=ext;r.status='CARGADO';r.date=r.date||todayIso();}
+    notify('Archivo cargado correctamente.');
+  }
+  renderAll();
+}
+function saveFormDoc(id){const d=docById(id);d.phase='Formulario guardado';d.date=d.date||todayIso();d.status='PENDIENTE';d.obs='Información registrada. Falta generar documento y cargar firmado.';closeModal(d.modal);notify('Información guardada. Ya puede generar el documento.');renderAll()}
+function generateDoc(id){const d=docById(id);d.phase='Documento generado';d.status='PENDIENTE';d.obs='Documento generado. Debe descargarse para firma y cargarse firmado.';notify('Documento generado correctamente.');renderAll()}
+function downloadDoc(id){const d=docById(id);notify(`Descarga iniciada: ${d.title}`)}
+function deleteFile(id){const d=docById(id);d.file='';d.status='PENDIENTE';d.obs='Archivo eliminado por el proveedor.';notify('Archivo eliminado.');renderAll()}
+function buildDocPreview(docName){const razon=document.getElementById('consName')?.value||document.getElementById('dj_ruc')?.value||'—';const ruc=document.getElementById('dj_ruc')?.value||'—';const lines=(count,bw)=>Array.from({length:count},(_,i)=>{const w=Math.min(bw-(i%3)*14+(i%2)*7,96);return '<div style="height:10px;background:#dde3ed;border-radius:3px;margin-bottom:9px;width:'+w+'%"></div>';}).join('');return '<div style="background:#e2e8f0;padding:18px;border-radius:10px;display:flex;justify-content:center"><div style="background:#fff;width:100%;max-width:520px;box-shadow:0 4px 24px rgba(0,0,0,.2);padding:30px 34px;font-family:Arial,sans-serif;position:relative;min-height:360px"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-28deg);font-size:46px;font-weight:900;color:rgba(37,99,235,.05);pointer-events:none;white-space:nowrap;letter-spacing:.04em">VISTA PREVIA</div><div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2.5px solid #1e3a5f;padding-bottom:11px;margin-bottom:20px"><div><div style="font-size:11px;font-weight:800;color:#1e3a5f;letter-spacing:.06em">MINERA VETA DORADA S.A.C.</div><div style="font-size:9px;color:#64748b;margin-top:2px">RUC 20600059385 | Arequipa, Perú</div><div style="font-size:9px;color:#64748b">Gestión de Proveedores y Cumplimiento</div></div><div style="font-size:9px;color:#94a3b8;text-align:right;line-height:1.7"><div>RUC: '+ruc+'</div></div></div><div style="text-align:center;margin-bottom:18px"><div style="display:inline-block;background:#1e3a5f;color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:5px 14px;border-radius:4px">'+docName+'</div><div style="font-size:9px;color:#94a3b8;margin-top:7px">Presentado por: '+razon+'</div></div>'+lines(4,95)+'<div style="height:1px;background:#e2e8f0;margin:13px 0"></div>'+lines(3,88)+'<div style="height:1px;background:#e2e8f0;margin:13px 0"></div>'+lines(2,80)+'<div style="margin-top:24px;display:flex;justify-content:space-between;align-items:flex-end"><div style="border-top:1px solid #334155;padding-top:7px;flex:1"><div style="font-size:9px;font-weight:700;color:#334155">'+razon+'</div><div style="font-size:9px;color:#94a3b8">Representante / Responsable</div></div><div style="width:58px;height:58px;border:2.5px solid #2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#2563eb;text-align:center;line-height:1.3;flex-shrink:0;margin-left:20px">RECIBIDO<br>2026</div></div><div style="margin-top:16px;padding-top:10px;border-top:1px dashed #cbd5e1;font-size:8px;color:#94a3b8;text-align:center">Documento presentado en el marco del proceso de homologación de proveedores · Sistema BBSS</div></div></div>';}
+function previewDoc(docName){try{document.getElementById('previewDocTitle').textContent=docName;document.getElementById('previewDocContent').innerHTML=buildDocPreview(docName);}catch(e){}openModal('modalPreview');}
+function viewAllRoleDocs(docId){
+  const d=docById(docId);
+  const rows=roleRows[docId]||[];
+  const cargados=rows.filter(r=>r.blobUrl);
+  document.getElementById('previewDocTitle').textContent=d.title||'Documentos adjuntos';
+  if(!cargados.length){
+    document.getElementById('previewDocContent').innerHTML=buildDocPreview(d.title||'Documento');
+    openModal('modalPreview');return;
+  }
+  const roleColor=(role)=>{
+    if(role==='Representante Legal')return '#dc2626';
+    if(role==='Accionista')return '#f59e0b';
+    if(role==='Socio')return '#2563eb';
+    if(role==='Beneficiario Final')return '#16a34a';
+    return '#94a3b8';
+  };
+  const items=rows.map((r,i)=>{
+    const col=roleColor(r.role);
+    const hasFile=!!r.blobUrl;
+    const ext=(r.file||'').split('.').pop().toLowerCase();
+    const isImg=['jpg','jpeg','png','gif','webp'].includes(ext);
+    return `<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid #f1f5f9;background:#fff">
+      <div style="width:8px;height:48px;border-radius:4px;background:${col};flex-shrink:0"></div>
+      <div style="width:44px;height:44px;border-radius:10px;background:${hasFile?'#f0fdf4':'#f8fafc'};display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid ${hasFile?'#86efac':'#e2e8f0'}">
+        <i class="fa-solid ${hasFile?'fa-file-circle-check':'fa-file-circle-xmark'}" style="color:${hasFile?'#16a34a':'#94a3b8'};font-size:18px"></i>
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:800;font-size:13px;color:#111827">${r.role}</div>
+        <div style="font-size:12px;color:${hasFile?'#16a34a':'#9ca3af'};margin-top:2px">${hasFile?r.file:'Sin archivo cargado'}</div>
+      </div>
+      ${hasFile?`<a href="${r.blobUrl}" target="_blank" style="height:34px;padding:0 14px;background:#2563eb;color:#fff;border-radius:8px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;text-decoration:none;flex-shrink:0"><i class="fa-solid fa-eye"></i> Ver</a>`:''}
+    </div>`;
+  }).join('');
+  document.getElementById('previewDocContent').innerHTML=
+    `<div style="background:#e2e8f0;padding:14px;border-radius:10px">
+      <div style="background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.14);overflow:hidden">
+        <div style="padding:14px 18px;background:#1e3a5f;color:#fff;display:flex;align-items:center;gap:10px">
+          <i class="fa-solid fa-folder-open" style="font-size:16px"></i>
+          <span style="font-weight:800;font-size:13px">${cargados.length} de ${rows.length} archivos cargados</span>
+        </div>
+        ${items}
+      </div>
+    </div>`;
+  openModal('modalPreview');
+}
+function viewFile(id){
+  const d=docById(id);
+  if(d.blobUrl){window.open(d.blobUrl,'_blank');return;}
+  const title=d.title||'Documento';
+  if(id==='consent'){
+    document.getElementById('previewDocTitle').textContent=title;
+    document.getElementById('previewDocContent').innerHTML=
+      '<div style="background:#e2e8f0;padding:18px;border-radius:10px;display:flex;justify-content:center">'
+      +'<div style="background:#fff;width:100%;max-width:540px;max-height:62vh;overflow-y:auto;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:36px 40px">'
+      +consentHtml(false)+'</div></div>';
+    openModal('modalPreview');
+    return;
+  }
+  if(id==='dj'){
+    const ubos=[...document.querySelectorAll('.dj-ubo-row')].map(r=>({
+      nombre:r.querySelector('.dj-ubo-nombre')?.value||'',
+      tipodoc:r.querySelector('.dj-ubo-tipodoc')?.value||'',
+      doc:r.querySelector('.dj-ubo-doc')?.value||'',
+      nac:r.querySelector('.dj-ubo-nac')?.value||'',
+      pct:r.querySelector('.dj-ubo-pct')?.value||'',
+      vinculo:r.querySelector('.dj-ubo-vinculo')?.value||''
+    })).filter(u=>u.nombre);
+    const ci=document.querySelector('input[name="dj_ci"]:checked')?.value||'NO';
+    const blob=new Blob([djFullDoc(ubos,ci,false)],{type:'text/html'});
+    const url=URL.createObjectURL(blob);
+    document.getElementById('previewDocTitle').textContent=title;
+    document.getElementById('previewDocContent').innerHTML=
+      '<iframe src="'+url+'" style="width:100%;height:560px;border:none;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.18)"></iframe>';
+    openModal('modalPreview');
+    return;
+  }
+  previewDoc(title);
+}
+function viewRole(docId,role){
+  const r=roleDocs[docId]?.[role];
+  if(!r?.blobUrl){previewDoc(docById(docId)?.title||'Documento');return;}
+  window.open(r.blobUrl,'_blank');
+}
+function viewRoleRow(docId,idx){
+  const r=roleRows[docId]?.[idx];
+  if(!r?.blobUrl){previewDoc(docById(docId)?.title||'Documento');return;}
+  window.open(r.blobUrl,'_blank');
+}
+function clearRole(docId,role){const r=roleDocs[docId][role];r.file='';r.status='PENDIENTE';r.obs='Archivo eliminado.';docById(docId).status='PENDIENTE';docById(docId).file='';renderAll();notify('Carga del rol eliminada.')}
+function markRolesComplete(docId){const d=docById(docId);const any=roles.some(role=>roleDocs[docId][role].file);if(!any){notify('Debe cargar al menos un archivo o marcar no aplica.');return;}d.status='CARGADO';d.file='Carga por roles registrada';d.obs='Tabla de roles guardada.';notify('Tabla guardada correctamente.');renderAll()}
+function markDocNA(id){const d=docById(id);d.status='NO APLICA';d.file='';d.obs='Marcado como no aplica por el proveedor.';notify('Documento marcado como no aplica.');renderAll()}
+/* ── Consentimiento: vista previa y PDF ── */
+function consentHtml(forPrint){
+  const name=document.getElementById('consName')?.value||'';
+  const tipo=document.getElementById('consTipo')?.value||'DNI';
+  const doc=document.getElementById('consDoc')?.value||'';
+  const resp=document.getElementById('consResp')?.value||'SÍ autorizo';
+  const city=document.getElementById('consCity')?.value||'Lima';
+  const fecha=document.getElementById('consDate')?.value||'';
+  const si=resp==='SÍ autorizo';
+
+  let fechaDia='___', fechaMes='_______________', fechaAnio='______';
+  if(fecha){
+    const d=new Date(fecha+'T12:00:00');
+    fechaDia=d.getDate();
+    fechaMes=d.toLocaleDateString('es-PE',{month:'long'});
+    fechaAnio=d.getFullYear();
+  }
+
+  const siBox=`<span style="border:1px solid #111;display:inline-block;width:14px;height:14px;text-align:center;line-height:14px;font-size:10px;margin:0 2px">${si?'✓':' '}</span>`;
+  const noBox=`<span style="border:1px solid #111;display:inline-block;width:14px;height:14px;text-align:center;line-height:14px;font-size:10px;margin:0 2px">${!si?'✓':' '}</span>`;
+
+  const bold=(txt)=>`<strong>${txt}</strong>`;
+  const nameFmt = name ? bold(name) : bold('XXXXXXXXXXXXXXXX');
+  const docFmt  = doc  ? bold(doc)  : bold('XXXXXXXX');
+  const siMark  = si   ? 'X' : '&nbsp;&nbsp;&nbsp;';
+  const noMark  = !si  ? 'X' : '&nbsp;&nbsp;&nbsp;';
+  const fechaFmt = fecha
+    ? `${city}, ${fechaDia} de ${fechaMes} de ${fechaAnio}`
+    : `${city}, XX de enero de ${new Date().getFullYear()}`;
+
+  return `
+  <div style="position:relative;z-index:1;font-family:'Arial Narrow',Arial,sans-serif;font-size:11pt;line-height:1.45;color:#000">
+
+    <p style="text-align:center;font-weight:bold;font-size:13pt;text-decoration:underline;margin:0 0 10pt">Consentimiento Tratamiento de Datos Personales</p>
+
+    <p style="text-align:justify;margin:0 0 7pt">Mediante el presente documento yo ${nameFmt} identificado con ${tipo} Nro. ${docFmt}, en adelante EL TITULAR DE LOS DATOS, SI ( ${siMark} ) &nbsp; NO ( ${noMark} ) proporciono mis datos personales de manera libre, previa, expresa, voluntaria e inequívoca y doy mi consentimiento previo, expreso e informado para que todos los datos personales entregados a MINERA VETA DORADA SAC en adelante LA EMPRESA contenido en el presente documento, así como los datos personales que puedan surgir a lo largo del vínculo que mantengo con LA EMPRESA puedan ser tratados., con la finalidad de:</p>
+
+    <p style="text-align:justify;margin:0 0 3pt">-Verificar la información brindada por EL TITULAR DE LOS DATOS, tales como: personales, domiciliaria, crediticios, laborales, penales, judiciales y policiales; según corresponda, autorizando también, que los datos proporcionados puedan ser recopilados de manera oral, escrita o a través de cualquier medio de comunicación electrónica o convencional, a fin de integrarlos a la base de datos, que pueda ser realizado por LA EMPRESA o por terceros vinculados o no a la primera.</p>
+
+    <p style="text-align:justify;margin:0 0 6pt">- Con fines estadísticos y/o históricos que pueda ser realizado por LA EMPRESA o por terceros vinculados o no a la primera.</p>
+
+    <p style="text-align:justify;margin:0 0 10pt">El titular de los datos declara haber sido informado de forma clara y precisa respecto al ejercicio de sus derechos de información, acceso, rectificación, actualización, inclusión, supresión, oposición y revocación de conformidad con lo dispuesto en el D.S. 003-2013-JUS Reglamento de la Ley 29733, Ley de Protección de Datos Personales y sus modificatorias. El ejercicio de su derecho de revocación, puede ser ejercido en cualquier momento, mediante una comunicación escrita, firmada y con su huella digital, dicha comunicación surtirá efectos después de cinco (5) días hábiles de recibida la comunicación.</p>
+
+    <p style="margin:0 0 60pt">${fechaFmt}</p>
+
+    <div style="text-align:center">
+      <p style="margin:0">____________________________</p>
+      <p style="margin:0">Firma, sello y huella</p>
+      <p style="margin:0">Post Firma</p>
+    </div>
+
+  </div>`;
+}
+const CONSENT_KEY='vd_consent_data';
+const CONSENT_TTL=48*60*60*1000; // 48 horas en ms
+
+function saveConsentLocal(){
+  const data={
+    name:document.getElementById('consName')?.value||'',
+    tipo:document.getElementById('consTipo')?.value||'',
+    doc:document.getElementById('consDoc')?.value||'',
+    resp:document.getElementById('consResp')?.value||'',
+    city:document.getElementById('consCity')?.value||'',
+    ts:Date.now()
+  };
+  try{localStorage.setItem(CONSENT_KEY,JSON.stringify(data));}catch(e){}
+}
+
+function loadConsentLocal(){
+  try{
+    const raw=localStorage.getItem(CONSENT_KEY);
+    if(!raw)return;
+    const data=JSON.parse(raw);
+    if(Date.now()-data.ts>CONSENT_TTL){localStorage.removeItem(CONSENT_KEY);return;}
+    if(data.name)document.getElementById('consName').value=data.name;
+    if(data.tipo)document.getElementById('consTipo').value=data.tipo;
+    if(data.doc)document.getElementById('consDoc').value=data.doc;
+    if(data.resp)document.getElementById('consResp').value=data.resp;
+    if(data.city)document.getElementById('consCity').value=data.city;
+    /* fecha siempre = hoy */
+    document.getElementById('consDate').value=todayIso();
+  }catch(e){}
+}
+
+function updateConsentPreview(){
+  saveConsentLocal();
+  const box=document.getElementById('consentPreview');
+  if(box)box.innerHTML=consentHtml(false);
+}
+function generarPdfConsent(){
+  const w=window.open('','_blank','width=800,height:700');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Consentimiento</title>
+  <style>
+    @page{size:A4;margin:20mm 25mm}
+    *{box-sizing:border-box}
+    body{font-family:Arial,sans-serif;font-size:12px;color:#111;line-height:1.6;margin:0;padding:0;position:relative;overflow:hidden}
+  </style>
+  </head><body>${consentHtml(true)}<script>window.onload=function(){window.print();}<\/script></body></html>`);
+  w.document.close();
+  notify('PDF generado. Guárdalo, fírmalo y cárgalo en el portal.');
+}
+
+function toggleCiGrado(radio){
+  const campo=document.getElementById('dj_ci_grado');
+  if(!campo)return;
+  if(radio.value==='SI'){
+    campo.disabled=false;campo.style.background='';campo.style.color='';campo.style.cursor='';campo.focus();
+  } else {
+    campo.disabled=true;campo.value='';campo.style.background='#f1f5f9';campo.style.color='#94a3b8';campo.style.cursor='not-allowed';
+  }
+}
+
+const _dniT=new WeakMap();
+async function lookupDniUbo(docInput){
+  docInput.value=docInput.value.replace(/\D/g,'').slice(0,8);
+  const numero=docInput.value;
+  const isRL=docInput.id==='dj_rl_doc';
+  const row=isRL?null:docInput.closest('.dj-ubo-row');
+  const tipoEl=isRL?document.getElementById('dj_rl_tipodoc'):row?.querySelector('.dj-ubo-tipodoc');
+  const nombreEl=isRL?document.getElementById('dj_rl_nombre'):row?.querySelector('.dj-ubo-nombre');
+  if(!tipoEl||!nombreEl)return;
+  if(tipoEl.value!=='DNI'){return;}
+  if(numero.length<8){nombreEl.placeholder='Persona natural';return;}
+  clearTimeout(_dniT.get(docInput));
+  _dniT.set(docInput,setTimeout(async()=>{
+    nombreEl.placeholder='Consultando DNI...';
+    try{
+      const r=await fetch('/api/dni?numero='+encodeURIComponent(numero),{cache:'no-store'});
+      const d=await r.json().catch(()=>({}));
+      if(r.ok&&d.ok&&d.nombre){nombreEl.value=d.nombre;nombreEl.placeholder='Persona natural';}
+      else{nombreEl.placeholder='DNI no encontrado';}
+    }catch(e){nombreEl.placeholder='Error al consultar';}
+  },420));
+}
+function addUboRow(){
+  const container=document.getElementById('dj_ubos');
+  const div=document.createElement('div');
+  div.className='dj-ubo-row formgrid';
+  div.style.cssText='border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;position:relative';
+  div.innerHTML=`<div class="field"><label>Apellidos y Nombres</label><input class="ctrl dj-ubo-nombre" placeholder="Persona natural"></div>
+    <div class="field"><label>Tipo Doc.</label><select class="ctrl dj-ubo-tipodoc"><option>DNI</option><option>CE</option><option>Pasaporte</option></select></div>
+    <div class="field"><label>N° Documento</label><input class="ctrl dj-ubo-doc" placeholder="Número" oninput="lookupDniUbo(this)"></div>
+    <div class="field"><label>Nacionalidad</label><input class="ctrl dj-ubo-nac" value="Peruana"></div>
+    <div class="field"><label>% Participación</label><input class="ctrl dj-ubo-pct" type="number" min="10" max="100" placeholder="10"></div>
+    <div class="field"><label>Vínculo</label><select class="ctrl dj-ubo-vinculo"><option value="">Seleccionar...</option><option>Accionista</option><option>Director</option><option>Gerente</option><option>Gerente General</option><option>Titular Gerente</option><option>Apoderado</option><option>Socio</option><option>Otros</option></select></div>
+    <button onclick="this.parentElement.remove()" style="position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:0;background:#fee2e2;color:#dc2626;cursor:pointer;font-size:13px;display:grid;place-items:center"><i class="fa-solid fa-xmark"></i></button>`;
+  container.appendChild(div);
+}
+
+function g(id){return document.getElementById(id)?.value||'';}
+
+let djGuardado=false;
+
+function saveDJ(){
+  const d=docById('dj');
+  d.phase='Formulario guardado';
+  d.date=d.date||todayIso();
+  d.status='PENDIENTE';
+  d.obs='DJ guardada. Genere el PDF, fírmelo y cárguelo.';
+  djGuardado=true;
+  const btn=document.getElementById('btnGenerarPdfDJ');
+  if(btn){btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';}
+  notify('DJ guardada ✓ Ahora puede generar el PDF.');
+  renderAll();
+  /* el modal permanece abierto */
+}
+
+function vistaPreviaDJ(){
+  const ubos=[...document.querySelectorAll('.dj-ubo-row')].map(r=>({
+    nombre:r.querySelector('.dj-ubo-nombre')?.value||'',
+    tipodoc:r.querySelector('.dj-ubo-tipodoc')?.value||'',
+    doc:r.querySelector('.dj-ubo-doc')?.value||'',
+    nac:r.querySelector('.dj-ubo-nac')?.value||'',
+    pct:r.querySelector('.dj-ubo-pct')?.value||'',
+    vinculo:r.querySelector('.dj-ubo-vinculo')?.value||''
+  })).filter(u=>u.nombre);
+  const ci=document.querySelector('input[name="dj_ci"]:checked')?.value||'NO';
+  const w=window.open('','_blank','width=900,height=900');
+  w.document.write(djFullDoc(ubos,ci,false));
+  w.document.close();
+}
+
+function generarPdfDJ(){
+  if(!djGuardado){notify('Primero guarda la DJ antes de generar el PDF.');return;}
+  const ubos=[...document.querySelectorAll('.dj-ubo-row')].map(r=>({
+    nombre:r.querySelector('.dj-ubo-nombre')?.value||'',
+    tipodoc:r.querySelector('.dj-ubo-tipodoc')?.value||'',
+    doc:r.querySelector('.dj-ubo-doc')?.value||'',
+    nac:r.querySelector('.dj-ubo-nac')?.value||'',
+    pct:r.querySelector('.dj-ubo-pct')?.value||'',
+    vinculo:r.querySelector('.dj-ubo-vinculo')?.value||''
+  })).filter(u=>u.nombre);
+  const ci=document.querySelector('input[name="dj_ci"]:checked')?.value||'NO';
+  const w=window.open('','_blank','width=900,height=900');
+  w.document.write(djFullDoc(ubos,ci,true));
+  w.document.close();
+  notify('PDF generado. Use Ctrl+P → Guardar como PDF para descargarlo.');
+}
+
+function djFullDoc(ubos,ci,print){
+  const css=`
+    @page{size:A4;margin:10mm 12mm}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,sans-serif;font-size:8.5px;color:#000;line-height:1.3}
+    table{width:100%;border-collapse:collapse}
+    td,th{border:1px solid #000;padding:2px 4px;vertical-align:top;font-size:8.5px}
+    .sec{background:#d9d9d9;font-weight:bold;text-align:center;font-size:8.5px;padding:2px 4px;border:1px solid #000}
+    .lbl{font-weight:bold;white-space:nowrap;font-size:8px;width:120px}
+    .val{min-height:14px}
+    .hdr{background:#d9d9d9;font-weight:bold;text-align:center;font-size:8px;border:1px solid #000}
+    .top{display:flex;align-items:center;border:1px solid #000;margin-bottom:0}
+    .logo-cell{padding:4px 8px;border-right:1px solid #000;width:160px}
+    .title-cell{flex:1;text-align:center;padding:4px}
+    h1{font-size:13px;font-weight:900;text-transform:uppercase;margin-bottom:2px}
+    h2{font-size:7.5px;font-weight:700}
+    .decl-row{font-size:8px;border:1px solid #000;padding:3px 5px;margin-bottom:0}
+    .empty{min-height:12px;display:block}
+    .chk{display:inline-block;width:10px;height:10px;border:1px solid #000;margin-right:3px;text-align:center;line-height:10px;font-size:8px}
+    .sig{margin-top:8px;font-size:8.5px}
+    .sig table td{border:none;border-top:1px solid #000;text-align:center;padding-top:2px}
+  `;
+  const erow=`<tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td></tr>`;
+  const urow=(u)=>`<tr><td>${u.nombre}</td><td>${u.tipodoc}</td><td>${u.doc}</td><td>${u.nac}</td><td>${u.pct}%</td><td>${u.vinculo}</td></tr>`;
+  const urows=ubos.length?ubos.map(urow).join(''):`<tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>`;
+
+  const body=`
+  <!-- ENCABEZADO -->
+  <table style="margin-bottom:0">
+    <tr>
+      <td style="width:160px;border:1px solid #000;padding:4px"><img src="https://www.vetadorada.pe/img/logo_home.png" style="height:36px"></td>
+      <td style="border:1px solid #000;text-align:center;padding:4px">
+        <div style="font-size:14px;font-weight:900;text-transform:uppercase">Ficha de Registro de Proveedor</div>
+        <div style="font-size:7px;font-weight:700">(DECLARACIÓN JURADA DE DEBIDA DILIGENCIA DE CONOCIMIENTO DEL PROVEEDOR DE BIENES/SERVICIOS Y BENEFICIARIOS FINALES)</div>
+      </td>
+    </tr>
+  </table>
+  <table style="margin-bottom:0">
+    <tr><td style="border:1px solid #000;padding:3px;font-size:8px">El que suscribe en condición de Representante Legal, <b>DECLARA BAJO JURAMENTO</b> que los datos consignados en esta solicitud son fiel expresión de la verdad.</td></tr>
+  </table>
+
+  <!-- DATOS GENERALES -->
+  <table><tr><td colspan="4" class="sec">DATOS GENERALES DE LA EMPRESA</td></tr>
+    <tr><td class="lbl">Razón Social:</td><td colspan="3" class="val">${g('dj_razon')}</td></tr>
+    <tr><td class="lbl">Nombre Comercial:</td><td colspan="3" class="val">${g('dj_comercial')}</td></tr>
+    <tr><td class="lbl">N° RUC:</td><td class="val">${g('dj_ruc')}</td><td class="lbl">CIUU Sunat 1:</td><td class="val">${g('dj_ciuu1')}</td></tr>
+    <tr><td class="lbl">Domicilio Fiscal:</td><td colspan="3" class="val">${g('dj_domfiscal')}</td></tr>
+    <tr><td class="lbl">Dirección Comercial:</td><td colspan="3" class="val">${g('dj_domcomercial')}</td></tr>
+    <tr><td class="lbl">Teléfonos / Celular:</td><td class="val">${g('dj_telefono')}</td><td class="lbl">Años de Experiencia:</td><td class="val">${g('dj_anios')}</td></tr>
+    <tr><td class="lbl">Web:</td><td colspan="3" class="val">${g('dj_web')}</td></tr>
+    <tr><td colspan="4" class="sec">DATOS DEL NEGOCIO</td></tr>
+    <tr><td class="lbl">Giro del Negocio:</td><td colspan="3" class="val">${g('dj_giro')}</td></tr>
+    <tr><td class="lbl">Fecha de Constitución:</td><td class="val">${g('dj_constitucion')}</td><td class="lbl">N° Trabajadores:</td><td class="val">${g('dj_trabajadores')}</td></tr>
+  </table>
+
+  <!-- EMPRESAS AFILIADAS -->
+  <table><tr><td colspan="6" class="sec">EMPRESAS AFILIADAS, en caso forme parte de un grupo económico/asociación</td></tr>
+    <tr><td class="hdr">Persona Natural o Jurídica</td><td class="hdr">Apellidos y Nombres /Razón Social</td><td class="hdr">Tipo de Documento</td><td class="hdr">N° Documento</td><td class="hdr">Domicilio</td><td class="hdr">Grupo Económico/Asociación</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td></tr>
+  </table>
+
+  <!-- PRINCIPALES CLIENTES -->
+  <table><tr><td colspan="6" class="sec">PRINCIPALES CLIENTES, indicar los clientes que en acumulado anual representen el 30% de sus ventas</td></tr>
+    <tr><td class="hdr">Persona Natural o Jurídica</td><td class="hdr">Apellidos y Nombres /Razón Social</td><td class="hdr">Tipo de Documento</td><td class="hdr">N° Documento</td><td class="hdr">Domicilio</td><td class="hdr">Cliente Desde (mm/aa)</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td></tr>
+  </table>
+
+  <!-- PRINCIPALES PROVEEDORES -->
+  <table><tr><td colspan="6" class="sec">PRINCIPALES PROVEEDORES, indicar los proveedores que en acumulado anual representen el 30% de sus compras.</td></tr>
+    <tr><td class="hdr">Persona Natural o Jurídica</td><td class="hdr">Apellidos y Nombres /Razón Social</td><td class="hdr">Tipo de Documento</td><td class="hdr">N° Documento</td><td class="hdr">Domicilio</td><td class="hdr">% Compras</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td></tr>
+  </table>
+
+  <!-- BENEFICIARIOS FINALES -->
+  <table><tr><td colspan="6" class="sec">BENEFICIARIOS FINALES Y RELACIONADOS CON LA EMPRESA</td></tr>
+    <tr><td colspan="6" class="hdr" style="text-align:left;font-weight:bold">BENEFICIARIOS FINALES (Consignar únicamente a Persona/s Natural/es)</td></tr>
+    <tr><td class="hdr">Apellidos y Nombres</td><td class="hdr">Nacionalidad</td><td class="hdr">Tipo de Documento</td><td class="hdr">N° Documento</td><td class="hdr" colspan="2">Vínculo con la empresa</td></tr>
+    ${urows}
+    <tr><td colspan="6" class="hdr" style="text-align:left;font-weight:bold">RELACIONADOS CON LA EMPRESA - ACCIONISTAS &gt;= 10%</td></tr>
+    <tr><td class="hdr">Apellidos y Nombres</td><td class="hdr">Nacionalidad</td><td class="hdr">Tipo de Documento</td><td class="hdr">N° Documento</td><td class="hdr" colspan="2">% de Participación</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val" colspan="2">&nbsp;</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val" colspan="2">&nbsp;</td></tr>
+    <tr><td colspan="6" class="hdr" style="text-align:left;font-weight:bold">RELACIONADOS CON LA EMPRESA - APODERADOS/RRLL</td></tr>
+    <tr><td class="hdr">Apellidos y Nombres</td><td class="hdr">Nacionalidad</td><td class="hdr">Tipo de Documento</td><td class="hdr">N° Documento</td><td class="hdr" colspan="2">Apoderado/RRLL</td></tr>
+    <tr><td class="val">${g('dj_rl_nombre')}</td><td class="val">${g('dj_rl_nac')}</td><td class="val">${g('dj_rl_tipodoc')}</td><td class="val">${g('dj_rl_doc')}</td><td class="val" colspan="2">Representante Legal</td></tr>
+    <tr><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val">&nbsp;</td><td class="val" colspan="2">&nbsp;</td></tr>
+  </table>
+
+  <!-- CONFLICTO DE INTERESES -->
+  <table><tr><td colspan="4" class="sec" style="text-align:left">CONFLICTO DE INTERESES</td></tr>
+    <tr><td colspan="4" style="border:1px solid #000;padding:3px;font-size:8px">¿Usted, su representante legal o algún integrante clave de su organización mantiene vínculo de consanguinidad (hasta el cuarto grado) o de afinidad (hasta el segundo grado) con algún Colaborador, directivo o funcionario de VETA DORADA S.A.C.?</td></tr>
+    <tr>
+      <td style="border:1px solid #000;width:60px;padding:3px;font-size:8px">
+        <span class="chk">${ci==='SI'?'✓':''}</span> SI<br>
+        <span class="chk">${ci==='NO'?'✓':''}</span> NO
+      </td>
+      <td style="border:1px solid #000;padding:3px;font-size:8px"><b>Nombres y Apellidos:</b> ${ci==='SI'?g('dj_ci_grado'):''}</td>
+      <td style="border:1px solid #000;padding:3px;font-size:8px"><b>Grado de Parentesco/Afinidad:</b> ${ci==='SI'?g('dj_ci_grado'):''}</td>
+      <td style="border:1px solid #000;padding:3px">&nbsp;</td>
+    </tr>
+  </table>
+
+  <!-- CONTACTOS -->
+  <table><tr><td colspan="4" class="sec">CONTACTOS</td></tr>
+    <tr><td class="hdr">Área</td><td class="hdr">Contacto</td><td class="hdr">Email</td><td class="hdr">Teléfonos</td></tr>
+    <tr><td style="border:1px solid #000;font-size:8px">Comercial</td><td style="border:1px solid #000">${g('dj_c_comercial')}</td><td style="border:1px solid #000">${g('dj_e_comercial')}</td><td style="border:1px solid #000">${g('dj_telefono')}</td></tr>
+    <tr><td style="border:1px solid #000;font-size:8px">Facturación</td><td style="border:1px solid #000">${g('dj_c_factura')}</td><td style="border:1px solid #000">${g('dj_e_factura')}</td><td style="border:1px solid #000">&nbsp;</td></tr>
+    <tr><td style="border:1px solid #000;font-size:8px">Otros</td><td style="border:1px solid #000">&nbsp;</td><td style="border:1px solid #000">&nbsp;</td><td style="border:1px solid #000">&nbsp;</td></tr>
+  </table>
+
+  <!-- REFERENCIAS BANCARIAS -->
+  <table><tr><td colspan="3" class="sec">REFERENCIAS BANCARIAS</td></tr>
+    <tr><td class="hdr">Banco</td><td class="hdr">Sectorista</td><td class="hdr">Teléfonos</td></tr>
+    <tr><td style="border:1px solid #000">${g('dj_banco')}</td><td style="border:1px solid #000">&nbsp;</td><td style="border:1px solid #000">${g('dj_telefono')}</td></tr>
+    <tr><td style="border:1px solid #000">&nbsp;</td><td style="border:1px solid #000">&nbsp;</td><td style="border:1px solid #000">&nbsp;</td></tr>
+  </table>
+
+  <!-- POLÍTICA DE PAGOS -->
+  <table><tr><td colspan="4" class="sec">POLÍTICA DE PAGOS</td></tr>
+    <tr>
+      <td style="border:1px solid #000;font-weight:bold;font-size:8px;width:100px">Modalidad de Pago</td>
+      <td colspan="3" style="border:1px solid #000;font-size:8px">
+        <span class="chk">${g('dj_pago_mod')==='Abono en cuenta'?'✓':''}</span> Abono en cuenta &nbsp;&nbsp;
+        <span class="chk">${g('dj_pago_mod')==='Cheque de gerencia'?'✓':''}</span> Cheque de gerencia
+      </td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #000;font-weight:bold;font-size:8px">Cuenta Bancaria</td>
+      <td colspan="3" style="border:1px solid #000;font-size:8px">
+        <span class="chk">${g('dj_cuenta_tipo')==='Cuenta de Ahorro'?'✓':''}</span> Cuenta de Ahorro &nbsp; Banco: ${g('dj_banco')} &nbsp;
+        <span class="chk">${g('dj_moneda')==='Soles'?'✓':''}</span> Soles &nbsp;
+        <span class="chk">${g('dj_moneda')==='Dólares'?'✓':''}</span> Dólares<br>
+        Número de cuenta: ${g('dj_cuenta_num')}<br>
+        Número de cuenta Interbancaria: ${g('dj_cci')}<br>
+        <span class="chk">${g('dj_cuenta_tipo')==='Cuenta Corriente'?'✓':''}</span> Cuenta Corriente &nbsp; Banco: ${g('dj_banco')} &nbsp;
+        <span class="chk">${g('dj_moneda')==='Soles'?'✓':''}</span> Soles &nbsp;
+        <span class="chk">${g('dj_moneda')==='Dólares'?'✓':''}</span> Dólares
+      </td>
+    </tr>
+  </table>
+
+  <!-- DOCUMENTOS A PRESENTAR -->
+  <table><tr><td class="sec">DOCUMENTOS A PRESENTAR</td></tr>
+    <tr><td style="border:1px solid #000;font-size:8px;padding:4px">
+      <span class="chk">✓</span> Ficha RUC (Máx. 3 meses de antigüedad).<br>
+      <span class="chk">✓</span> Copia del DOI del representante legal. (DNI, Carnet de Extranjería, Pasaporte u Otro)<br>
+      <span class="chk">✓</span> Vigencia de poderes (Máx. 1 mes de antigüedad).<br>
+      <span class="chk">✓</span> Copia Literal de la empresa (Máx. 3 meses de antigüedad).
+    </td></tr>
+  </table>
+
+  <!-- FIRMA -->
+  <table style="margin-top:8px;border:none">
+    <tr>
+      <td style="border:none;width:33%;font-size:8px">
+        Nombres y Apellidos: <span style="border-bottom:1px solid #000;display:inline-block;width:120px">${g('dj_rl_nombre')}</span><br>
+        DNI: <span style="border-bottom:1px solid #000;display:inline-block;width:80px">${g('dj_rl_doc')}</span><br>
+        Fecha: <span style="border-bottom:1px solid #000;display:inline-block;width:80px">${g('dj_fecha')||new Date().toLocaleDateString('es-PE')}</span>
+      </td>
+      <td style="border:none;width:33%">&nbsp;</td>
+      <td style="border:none;width:33%;text-align:center;font-size:8px;vertical-align:bottom">
+        <div style="border-top:1px solid #000;padding-top:3px">Firma y sello del Representante Legal</div>
+      </td>
+    </tr>
+  </table>
+  ${print?`<script>window.onload=function(){window.print();}<\/script>`:''}`;
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>DJ - ${g('dj_razon')}</title><style>${css}</style></head><body>${body}</body></html>`;
+}
+
+function markInduction(){inductionOk=true;const btn=document.getElementById('inductionBtn');if(btn){btn.innerHTML='<i class="fa-solid fa-check"></i> Inducción revisada';btn.className='btn bgreen';}notify('Inducción marcada como revisada.')}
+
+/* ── Video inductivo ── */
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  if(id==='modalVideo') initVideoModal();
+  if(id==='modalConsent'){
+    document.getElementById('consDate').value=todayIso();
+    loadConsentLocal();
+    setTimeout(updateConsentPreview,50);
+  }
+}
+function initVideoModal(){
+  const vid=document.getElementById('inductionVideo');
+  const fallback=document.getElementById('videoFallback');
+  /* resetear botones */
+  const btnM=document.getElementById('btnManual');
+  const btnC=document.getElementById('btnContinuar');
+  btnM.style.opacity='.55'; btnM.style.pointerEvents='none';
+  btnC.style.opacity='.55'; btnC.style.background='#9ca8b8'; btnC.style.cursor='not-allowed'; btnC.disabled=true;
+  document.getElementById('videoProgressBar').style.width='0%';
+  /* detectar si el video existe */
+  vid.style.display='block'; fallback.style.display='none';
+  vid.pause();
+  try{vid.currentTime=0;}catch(e){}
+  vid.onerror=function(){vid.style.display='none';fallback.style.display='flex';enableVideoButtons();};
+  vid.onloadeddata=function(){try{vid.currentTime=Math.min(0.05,vid.duration||0);}catch(e){}};
+  vid.load();
+}
+function onVideoProgress(vid){
+  if(!vid.duration) return;
+  const pct=(vid.currentTime/vid.duration)*100;
+  document.getElementById('videoProgressBar').style.width=pct+'%';
+}
+function onVideoEnded(){
+  enableVideoButtons();
+  notify('Video completado. Ya puede descargar el manual y continuar.');
+}
+function enableVideoButtons(){
+  const btnM=document.getElementById('btnManual');
+  const btnC=document.getElementById('btnContinuar');
+  btnM.style.opacity='1'; btnM.style.pointerEvents='auto'; btnM.style.background='#16a34a'; btnM.style.color='#fff'; btnM.style.boxShadow='0 8px 18px rgba(22,163,74,.28)';
+  btnC.style.opacity='1'; btnC.style.background='#0067AC'; btnC.style.cursor='pointer'; btnC.disabled=false;
+}
+function finishInduction(){
+  const vid=document.getElementById('inductionVideo');
+  vid.pause();
+  markInduction();
+  closeModal('modalVideo');
+  showScreen('screenHome');
+}
+function startRegistration(){
+  if(records.length){openModal('modalRegistroExistente');return;}
+  showScreen('screenDocs');renderAll();
+}
+function continuePreviousRegistration(){closeModal('modalRegistroExistente');showScreen('screenDocs');renderAll()}
+function resetDocumentationDraft(){
+  docs.forEach(d=>{d.status='PENDIENTE';d.file='';d.date='';d.expiry='';d.blobUrl='';d.fileExt='';if(d.kind==='form')d.phase='Formulario pendiente';});
+  Object.values(roleRows).forEach(rows=>rows.forEach(r=>{r.file='';r.date='';r.status='PENDIENTE';r.blobUrl='';r.fileExt='';}));
+  selectedDoc='consent';records.length=0;
+}
+function startNewAndCancelPrevious(){closeModal('modalRegistroExistente');resetDocumentationDraft();showScreen('screenDocs');renderAll()}
+function saveAll(){notify('Avance guardado correctamente.')}
+function sendReview(){const missing=getActiveDocs().filter(d=>d.required&&!isComplete(d));if(missing.length){notify('No se puede enviar: faltan documentos obligatorios.');selectDoc(missing[0].id);return;}docs.forEach(d=>{if(d.status==='CARGADO')d.status='EN REVISIÓN'});ensureDraftRecord().estado='EN REVISIÓN';notify('Registro enviado a revisión.');showScreen('screenProfile');renderAll()}
+function renderAll(){updateProviderProfile();renderRecords();renderDocList();renderProgress()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modalbg.open').forEach(m=>m.classList.remove('open'))});
+document.addEventListener('DOMContentLoaded',()=>{
+  const tl=document.getElementById('todayLabel');if(tl)tl.textContent=todayPe();
+  const cd=document.getElementById('consDate');if(cd)cd.value=todayIso();
+  initRegistrationLookup();
+  renderAll();
+});
+</script>
+</body>
+</html>

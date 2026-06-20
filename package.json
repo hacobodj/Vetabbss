@@ -1,0 +1,13 @@
+{
+  "name": "portal-bbss-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portal BBSS mockup protegido para Vercel",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  }
+}

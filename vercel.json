@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "^/Proveedor_BBSS\\.html$",
+      "status": 404,
+      "dest": "/404.html"
+    },
+    {
+      "src": "^/Logistica_BBSS\\.html$",
+      "status": 404,
+      "dest": "/404.html"
+    },
+    {
+      "src": "^/Compliance_BBSS\\.html$",
+      "status": 404,
+      "dest": "/404.html"
+    },
+    {
+      "src": "^/api/_private_files/(.*)$",
+      "status": 404,
+      "dest": "/404.html"
+    },
+    {
+      "src": "^/app$",
+      "dest": "/api/app"
+    },
+    {
+      "src": "^/portal/(proveedor|logistica|compliance)$",
+      "dest": "/api/portal?view=$1"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "^(.*)$",
+      "dest": "/index.html"
+    }
+  ]
+}

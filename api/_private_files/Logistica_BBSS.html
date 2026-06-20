@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Logística BBSS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+<style>
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --line:#e5e7eb;
+  --line2:#dbe2ea;
+  --soft:#f8fafc;
+  --text:#0f172a;
+  --muted:#64748b;
+  --blue:#0067ac;
+  --blue2:#005a99;
+  --blue3:#2563eb;
+  --green:#16a34a;
+  --green2:#dcfce7;
+  --greenText:#166534;
+  --red:#dc2626;
+  --red2:#fee2e2;
+  --redText:#991b1b;
+  --amber:#c69214;
+  --amber2:#fef3c7;
+  --amberText:#92400e;
+  --shadow:0 8px 24px rgba(15,23,42,.08);
+  --shadow2:0 22px 70px rgba(15,23,42,.24);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Inter,Poppins,"Segoe UI",system-ui,sans-serif;color:var(--text);font-size:14px}
+button,input,select,textarea{font-family:inherit}
+.header{height:52px;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 2px 12px rgba(15,23,42,.06);display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:30}
+.logo-vd{height:30px;width:auto;display:block;object-fit:contain}
+.page{padding:16px 26px 28px;max-width:1880px;margin:0 auto}
+.screen{display:none}.screen.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:16px}
+.titlebar h1{font-size:24px;line-height:1.1;margin:0;font-weight:900;letter-spacing:-.025em;color:#0f172a}
+.btn{height:40px;border-radius:10px;border:1px solid transparent;padding:0 15px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:.15s;white-space:nowrap;background:#fff;color:var(--text)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 16px rgba(15,23,42,.10)}
+.bblue{background:var(--blue3);color:#fff;border-color:var(--blue3)}
+.bgreen{background:var(--green);color:#fff;border-color:var(--green)}
+.bogray{background:#fff;color:#334155;border-color:#cbd5e1}
+.boslate{background:#fff;color:#0f172a;border-color:#d1d5db}
+.toolbar{padding:16px;margin-bottom:16px}
+.filtergrid{display:grid;grid-template-columns:1.55fr 1fr 1fr .95fr auto auto;gap:14px;align-items:end}
+.field label{display:block;font-size:12px;font-weight:800;color:#334155;margin:0 0 6px}
+.ctrl{height:40px;width:100%;border:1px solid #d1d5db;border-radius:9px;background:#fff;padding:8px 11px;outline:none;color:#111827;font-size:14px}
+.ctrl:focus{border-color:var(--blue3);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.tablebox{overflow:hidden}.scroll{max-height:610px;overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:1120px}
+thead th{background:var(--blue);color:#fff;position:sticky;top:0;z-index:2;padding:12px 12px;font-size:13px;text-align:center;white-space:nowrap;font-weight:850}
+tbody td{padding:12px;border-bottom:1px solid #edf2f7;text-align:center;white-space:nowrap}
+tbody tr{background:#fff}tbody tr:hover{background:#f8fafc}.left{text-align:left}
+.chip{height:26px;border-radius:999px;padding:0 12px;font-size:12px;font-weight:850;display:inline-flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.01em}.chip-green{background:var(--green2);color:var(--greenText)}.chip-red{background:var(--red2);color:var(--redText)}.chip-amber{background:var(--amber2);color:var(--amberText)}.chip-blue{background:#dbeafe;color:#1d4ed8}.chip-gray{background:#e5e7eb;color:#374151}.chip-soft{background:#f1f5f9;color:#334155}
+.btnshow{height:32px;border-radius:8px;border:0;background:var(--blue);color:#fff;font-weight:800;padding:0 14px;display:inline-flex;align-items:center;gap:7px;cursor:pointer}.btnshow:hover{background:var(--blue2)}
+.topdetail{padding:18px 22px;margin-bottom:16px}.toprow{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}.rtitle{font-size:26px;font-weight:700;letter-spacing:0;margin:0 0 8px;color:#0f172a}.meta{display:flex;align-items:center;flex-wrap:wrap;gap:13px;color:#4b5563;font-size:13px}.meta b{font-weight:600}.detail-actions{display:flex;gap:12px;flex-wrap:wrap}.detail-actions .btn{height:36px;padding:0 13px;font-weight:600}
+.invite{margin-top:16px;border:1px solid var(--line);border-radius:14px;background:#f9fafb;padding:14px 16px}.sectiontitle{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;margin:0 0 12px;color:#0f172a}.sectiontitle i{color:var(--blue3)}.infog{display:grid;grid-template-columns:repeat(4,1fr);gap:12px 20px}.lab{display:block;color:var(--muted);font-size:12px;margin-bottom:3px}.val{font-weight:600;color:#0f172a;font-size:13px;line-height:1.2}.detail-layout{display:grid;grid-template-columns:1.25fr .75fr;gap:16px;align-items:stretch}.docpanel,.resultpanel{padding:16px;min-height:0;display:flex;flex-direction:column}.doclist{display:flex;flex-direction:column;flex:1}.docrow{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line);padding:10px 0}.docrow:first-child{padding-top:0}.docrow:last-child{border-bottom:0}.doct{display:flex;align-items:center;gap:9px;font-weight:700;color:#0f172a;line-height:1.15}.doct i{color:var(--blue3);width:18px;text-align:center}.docdate{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px}.docact{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}.round{width:34px;height:34px;border-radius:50%;border:0;color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.rb{background:var(--blue3)}.rg{background:var(--green)}.docsel{min-width:138px;min-height:34px;border-radius:9px;border:1px solid #d1d5db;padding:6px 10px;font-size:13px;font-weight:700;background:#fff;color:var(--text);display:inline-flex;align-items:center;justify-content:center}.status-pill{height:28px;border-radius:9px;border:1px solid transparent;padding:0 11px;font-size:12px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}.status-green{background:#ecfdf5;color:#166534;border-color:#86efac}.status-amber{background:#fffbeb;color:#92400e;border-color:#fde68a}.status-red{background:#fef2f2;color:#991b1b;border-color:#fecaca}.status-gray{background:#f8fafc;color:#475569;border-color:#cbd5e1}
+.resultpanel{justify-content:flex-start}.resultgrid{display:grid;grid-template-columns:1fr;gap:8px}.rfield .rlabel{font-size:12px;color:#64748b;font-weight:850;margin-bottom:4px}.rbox{min-height:34px;border:1px solid var(--line);border-radius:9px;padding:7px 11px;font-weight:900;display:flex;align-items:center;justify-content:space-between;gap:8px}.rbox-green{background:var(--green2);color:var(--greenText);border-color:#86efac}.rbox-blue{background:#dbeafe;color:#1d4ed8;border-color:#bfdbfe}.rbox-amber{background:var(--amber2);color:var(--amberText);border-color:#fde68a}.rbox-red{background:var(--red2);color:var(--redText);border-color:#fecaca}.certline{border-top:1px solid var(--line);margin-top:12px;padding-top:12px}.certstatus{display:flex;align-items:center;gap:10px;border:1px solid #dbe2ea;background:#fbfdff;border-radius:12px;padding:11px 12px}.certicon{width:38px;height:38px;border-radius:50%;background:var(--green2);color:var(--green);display:grid;place-items:center;font-size:16px;flex-shrink:0}.certdesc{color:var(--muted);font-size:12px;margin-top:2px}.result-actions{display:flex;justify-content:flex-end;margin-top:auto;padding-top:13px}
+.toast{position:fixed;right:24px;bottom:24px;z-index:100;background:#111827;color:#fff;padding:13px 16px;border-radius:10px;box-shadow:0 18px 40px rgba(15,23,42,.28);display:none;font-weight:800}
+.modalbg{position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:80;display:none;align-items:center;justify-content:center;padding:18px}.modalbg.open{display:flex}.modal{width:min(670px,96vw);max-height:94vh;overflow:auto;background:#fff;border-radius:8px;box-shadow:var(--shadow2);position:relative}.modalhead{height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px}.modalhead h2{font-size:20px;font-weight:900;margin:0}.xbtn{width:26px;height:26px;border:0;background:transparent;font-size:18px;line-height:1;cursor:pointer;color:#334155}.modalbody{padding:4px 22px 22px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px 24px}.formgrid .span2{grid-column:1/-1}.formgrid label{display:block;font-weight:850;color:#030712}.formgrid input,.formgrid select,.formgrid textarea{width:100%;height:40px;margin-top:6px;border:1px solid #d1d5db;border-radius:6px;padding:8px 12px;font-size:15px;outline:none}.formgrid textarea{height:64px;resize:vertical}.formgrid input:focus,.formgrid select:focus,.formgrid textarea:focus{border-color:var(--blue3);box-shadow:0 0 0 3px rgba(37,99,235,.10)}.input-ok-wrap{position:relative}.input-ok-wrap input{padding-right:38px}.input-ok{position:absolute;right:11px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;display:none;place-items:center;background:#dcfce7;color:#166534;font-size:14px;font-weight:900}.input-ok.show{display:grid}.ruc-hint{display:block;margin-top:6px;font-size:12px;font-weight:750;color:#64748b;min-height:16px}.ruc-hint.ok{color:#166534}.ruc-hint.err{color:#991b1b}.modalfoot{display:flex;justify-content:flex-end;padding:0 22px 22px;margin-top:22px}.invite-modal{width:min(760px,96vw);max-height:92vh}.invite-modal .modalhead{height:38px;padding:0 18px}.invite-modal .modalhead h2{font-size:19px}.invite-modal .modalbody{padding:0 18px 14px}.invite-modal .formgrid{gap:10px 18px}.invite-modal .formgrid label{font-size:14px;line-height:1.1}.invite-modal .formgrid input,.invite-modal .formgrid select{height:35px;margin-top:5px;padding:6px 10px;font-size:14px}.invite-modal .formgrid textarea{height:56px;margin-top:5px;padding:7px 10px;font-size:14px}.invite-modal .ruc-hint{margin-top:2px;min-height:12px;font-size:11px}.invite-modal .modalfoot{padding:0 8px 0;margin-top:8px}.invite-modal .btn{height:36px;padding:0 16px}.invite-modal .input-ok{width:20px;height:20px;right:10px;font-size:13px}
+.cert{width:470px;max-width:100%;min-height:500px;border:1px solid #cbd5e1;margin:0 auto;text-align:center;padding:34px;background:#fff}.certbar{height:12px;background:linear-gradient(90deg,#c9961a,#f6e0a0);margin:-34px -34px 0}.certlogo{padding:12px 0 30px;display:flex;align-items:center;justify-content:space-between;font-size:12px}.certlogo img{height:22px;width:auto;object-fit:contain}.cert h2{font-size:26px;margin:0 0 40px;font-weight:900;letter-spacing:-.02em}.cert p{line-height:1.58}.certbox{display:inline-block;text-align:left;border:1px solid #94a3b8;margin-top:30px;padding:10px 18px;border-radius:4px}.certfoot{border-top:1px solid var(--line);padding:16px 22px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+@media(max-width:1200px){.detail-layout{grid-template-columns:1fr}.docpanel,.resultpanel{min-height:0}.infog{grid-template-columns:repeat(2,1fr)}.filtergrid{grid-template-columns:repeat(3,1fr)}.filtergrid .btn{width:100%}}
+@media(max-width:760px){.page{padding:18px}.titlebar,.toprow{flex-direction:column;align-items:flex-start}.filtergrid,.formgrid,.infog{grid-template-columns:1fr}.docrow{grid-template-columns:1fr}.detail-actions{width:100%}.detail-actions .btn{flex:1}.rtitle{font-size:22px}.header{height:50px}.logo-vd{height:34px}}
+#modalPreview .modal{width:min(850px,96vw);max-height:92vh;border-radius:16px;box-shadow:0 25px 70px rgba(0,0,0,.32);border:0}
+#modalPreview .mh{height:62px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+#modalPreview .mh h2{font-size:20px;margin:0;font-weight:800;color:#111827}
+#modalPreview .close{width:34px;height:34px;border:0;background:#f3f4f6;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#374151}
+#modalPreview .mbody{padding:12px}
+#modalCertificate .modal{width:min(860px,96vw);max-height:92vh;border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 25px 70px rgba(15,23,42,.30)}
+#modalCertificate .mh{height:62px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+#modalCertificate .mh h2{font-size:20px;margin:0;font-weight:900;color:#111827}
+#modalCertificate .close{width:34px;height:34px;border:0;background:#f3f4f6;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#111827}
+#modalCertificate .mbody{padding:24px 20px 24px;display:flex;justify-content:center;overflow:auto;max-height:calc(92vh - 145px)}
+#modalCertificate .cert{width:450px;max-width:100%;min-height:524px;border:1px solid #cbd5e1;margin:0 auto;text-align:center;padding:34px;background:#fff;box-shadow:none}
+#modalCertificate .certbar{height:12px;background:linear-gradient(90deg,#c9961a,#f6e0a0);margin:-34px -34px 0}
+#modalCertificate .certlogo{padding:12px 0 30px;display:flex;align-items:center;justify-content:space-between;font-size:12px}
+#modalCertificate .certlogo img{height:22px;width:auto;object-fit:contain}
+#modalCertificate .cert h2{font-size:26px;line-height:1.3;margin:0 0 42px;font-weight:900;color:#111827}
+#modalCertificate .cert p{line-height:1.58;color:#111827}
+#modalCertificate .certbox{display:inline-block;text-align:left;border:1px solid #94a3b8;margin-top:34px;padding:10px 18px;border-radius:4px}
+#modalCertificate .certfoot{border-top:1px solid #e5e7eb;padding:16px 24px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap;background:#fff}
+</style>
+</head>
+<body>
+<header class="header" aria-label="Veta Dorada">
+  <img class="logo-vd" src="https://www.vetadorada.pe/img/logo_home.png" alt="VetaDorada">
+</header>
+
+<main class="page">
+  <section id="screenRegistry" class="screen active">
+    <div class="titlebar">
+      <h1>Bandeja de Registros</h1>
+      <button class="btn bgreen" onclick="openModal('modalInvitar')"><i class="fa-solid fa-plus"></i> Invitar proveedor</button>
+    </div>
+
+    <div class="card toolbar">
+      <div class="filtergrid">
+        <div class="field"><label>RUC / Razón Social</label><input id="searchInput" class="ctrl" placeholder="Buscar registro..." oninput="filterRows()"></div>
+        <div class="field"><label>Estado Docs</label><select id="docsFilter" class="ctrl" onchange="filterRows()"><option value="">Todos</option><option>EN REVISION</option><option>APROBADO</option><option>ANULADO</option></select></div>
+        <div class="field"><label>Estado Cumplimiento</label><select id="cumplFilter" class="ctrl" onchange="filterRows()"><option value="">Todos</option><option>APTO</option><option>NO APTO</option><option>PENDIENTE</option></select></div>
+        <div class="field"><label>Fecha Registro</label><input class="ctrl" type="date"></div>
+        <button class="btn bblue" onclick="filterRows()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+        <button class="btn bgreen" onclick="notify('Reporte Excel generado')"><i class="fa-regular fa-file-excel"></i> Generar Excel</button>
+      </div>
+    </div>
+
+    <div class="card tablebox">
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:90px">ITEM</th>
+              <th style="width:150px">RUC</th>
+              <th class="left">Razón Social</th>
+              <th style="width:170px">Estado Docs</th>
+              <th style="width:160px">Fecha Registro</th>
+              <th style="width:190px">Estado Cumplimiento</th>
+              <th style="width:140px">Opciones</th>
+            </tr>
+          </thead>
+          <tbody id="registryRows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="screenDetail" class="screen">
+    <div class="card topdetail">
+      <div class="toprow">
+        <div>
+          <h1 class="rtitle" id="detailName">CHUQUIPOMA PELAEZ MANUEL SANTOS</h1>
+          <div class="meta">
+            <span><i class="fa-solid fa-building"></i> <b>RUC:</b> <span id="detailRuc">20100246172</span></span>
+            <span><i class="fa-solid fa-calendar-day"></i> <b>Fecha Reg.:</b> <span id="detailDate">2026-06-03</span></span>
+            <span><i class="fa-solid fa-circle-info"></i> <b>Estado:</b> <span id="detailDocsChip" class="chip chip-amber">EN REVISIÓN</span></span>
+          </div>
+        </div>
+        <div class="detail-actions">
+          <button class="btn bogray" onclick="backToRegistry()"><i class="fa-solid fa-arrow-left"></i> Volver</button>
+          <button class="btn bblue" onclick="notify('Expediente descargado')"><i class="fa-solid fa-file-arrow-down"></i> Descargar</button>
+        </div>
+      </div>
+
+      <div class="invite">
+        <h3 class="sectiontitle"><i class="fa-solid fa-envelope-open-text"></i> Información de Invitación</h3>
+        <div class="infog">
+          <div><span class="lab">Core / No Core</span><span class="chip chip-gray" id="detailCore">NO CORE</span></div>
+          <div><span class="lab">Gestor Abastecimiento</span><div class="val" id="detailGestor">Felimón Taipe</div></div>
+          <div><span class="lab">Área Usuaria</span><div class="val" id="detailArea">MANTENIMIENTO</div></div>
+          <div><span class="lab">Tipo de prestaci&oacute;n y descripci&oacute;n</span><div class="val" id="detailService">BIEN &middot; VENTA DE ART&Iacute;CULOS EL&Eacute;CTRICOS</div></div>
+          <div><span class="lab">Contacto Proveedor</span><div class="val" id="detailContact">DAVID HUAMAN</div></div>
+          <div><span class="lab">Correo Proveedor</span><div class="val" id="detailMail">dhuaman@ceyesa.com.pe</div></div>
+          <div><span class="lab">Correo Gestor</span><div class="val" id="detailGestorMail">felimon.taipe@vetadorada.pe</div></div>
+          <div><span class="lab">Monto Servicio</span><div class="val" id="detailAmount">10,000.00 SOLES</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-layout">
+      <div class="card docpanel">
+        <h3 class="sectiontitle"><i class="fa-solid fa-folder-open"></i> Documentos del Registro</h3>
+        <div id="documentRows" class="doclist"></div>
+      </div>
+
+      <div class="card resultpanel">
+        <h3 class="sectiontitle"><i class="fa-solid fa-shield-halved"></i> Resultado de Cumplimiento</h3>
+        <div class="resultgrid">
+          <div class="rfield"><div class="rlabel">Nivel de Riesgo</div><div id="riskBox" class="rbox rbox-green">BAJO</div></div>
+          <div class="rfield"><div class="rlabel">Conclusión</div><div id="conclusionBox" class="rbox rbox-green">APTO</div></div>
+          <div class="rfield"><div class="rlabel">Vigencia de la Validación</div><div id="validityBox" class="rbox rbox-blue">2 años</div></div>
+          <div class="rfield"><div class="rlabel">Próximo a vencer</div><div id="expiryBox" class="rbox"><span><i class="fa-solid fa-calendar-days" style="color:#1d4ed8"></i> 03/06/2028</span></div></div>
+        </div>
+        <div class="certline">
+          <div class="certstatus">
+            <div class="certicon"><i class="fa-solid fa-certificate"></i></div>
+            <div style="flex:1">
+              <div style="font-weight:900">Certificado de cumplimiento</div>
+              <div class="certdesc">Resultado emitido por Cumplimiento y disponible para consulta.</div>
+            </div>
+          </div>
+        </div>
+        <div class="result-actions">
+          <button class="btn bblue" onclick="openModal('modalCertificate')"><i class="fa-regular fa-file-pdf"></i> Ver certificado</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="modalInvitar" class="modalbg">
+  <div class="modal invite-modal">
+    <div class="modalhead"><h2>Invitar Nuevo Proveedor</h2><button class="xbtn" onclick="closeModal('modalInvitar')">×</button></div>
+    <div class="modalbody">
+      <div class="formgrid">
+                <label>RUC Proveedor<input id="inviteRuc" type="text" maxlength="11" inputmode="numeric" autocomplete="off" oninput="handleRucInput(this)"><small id="rucLookupStatus" class="ruc-hint"></small></label>
+        <label>Correo del proveedor<input id="inviteEmail" type="email"></label>
+        <label class="span2">Nombre Proveedor<div class="input-ok-wrap"><input id="inviteName" type="text" autocomplete="organization"><span id="rucLookupOk" class="input-ok" aria-label="RUC validado">&check;</span></div></label>
+        <label>Contacto de Proveedor<input id="inviteContact" type="text"></label>
+        <label>Tipo de prestaci&oacute;n<select id="inviteTipoPrestacion"><option>Bien</option><option>Servicio</option></select></label>
+        <label class="span2">Descripci&oacute;n del bien o servicio<textarea id="inviteServiceDesc" placeholder="Ej: Venta de art&iacute;culos el&eacute;ctricos"></textarea></label>
+        <label>Monto de Servicio<input id="inviteAmount" type="number" step="0.01" min="0"></label>
+        <label>Moneda<select id="inviteCurrency"><option>Seleccione</option><option>Soles</option><option>D&oacute;lares</option></select></label>
+        <label class="span2">Modalidad de Selecci&oacute;n<select id="inviteMode"><option>Seleccione</option><option>Evaluaci&oacute;n entre proveedores</option><option>Proveedor &uacute;nico</option></select></label>
+        <label>&Aacute;rea Usuaria<select id="inviteArea"><option>Seleccione</option><option>ABASTECIMIENTO</option><option>MANTENIMIENTO</option><option>ADMINISTRACI&Oacute;N</option><option>SISTEMAS</option><option>CUMPLIMIENTO</option><option>PLANTA</option></select></label>
+        <label>Core / No Core<select id="inviteCore"><option>CORE</option><option>NO CORE</option></select></label>
+        <label class="span2">Gestor de Abastecimiento<select id="inviteGestor"><option>Luisa Bardales Mayta</option><option>Felim&oacute;n Taipe</option><option>Alfonso Loayza Quevedo</option><option>Julio Contreras</option><option>Carlita Sopla Tochon</option></select></label>
+        <label class="span2">Correo del Gestor Abastecimiento<input id="inviteGestorEmail" type="email"></label>
+      </div>
+      <div class="modalfoot"><button class="btn bblue" onclick="closeModal('modalInvitar');notify('Invitación enviada')">Enviar</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="modalCertificate" class="modalbg">
+  <div class="modal">
+    <div class="mh"><h2>Certificado de Evaluación de Cumplimiento</h2><button class="close" onclick="closeModal('modalCertificate')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="mbody">
+      <div class="cert">
+        <div class="certbar"></div>
+        <div class="certlogo"><img src="https://www.vetadorada.pe/img/logo_home.png" alt="VetaDorada"><span id="certCod">COD: DD-2026-000105</span></div>
+        <h2>Certificado de Aptitud de Proveedor</h2>
+        <p>Otorgado a:</p>
+        <h3 id="certRazon" style="font-size:22px;margin:10px 0;font-weight:900">CHUQUIPOMA PELAEZ MANUEL SANTOS</h3>
+        <p id="certRuc" style="font-weight:850">RUC N° 20100246172</p>
+        <p style="margin-top:26px">Este documento se emite en mérito de haber superado la evaluación de cumplimiento de Minera Veta Dorada, encontrándose apto para la vinculación como proveedor de bienes y servicios.</p>
+        <div class="certbox"><div><b>Emisión:</b> 03/06/2026</div><div><b>Vencimiento:</b> 03/06/2028</div></div>
+      </div>
+    </div>
+    <div class="certfoot"><button class="btn bblue" onclick="notify('Certificado descargado')"><i class="fa-solid fa-download"></i> Descargar documento</button></div>
+  </div>
+</div><div id="toast" class="toast"></div>
+<div id="modalPreview" class="modalbg"><div class="modal"><div class="mh"><h2 id="previewDocTitle">Vista previa</h2><button class="close" onclick="closeModal('modalPreview')"><i class="fa-solid fa-xmark"></i></button></div><div class="mbody" style="padding:12px"><div id="previewDocContent"></div></div></div></div>
+
+<script>
+const providers=[
+ {item:'105',ruc:'20100246172',razon:'CHUQUIPOMA PELAEZ MANUEL SANTOS',docs:'EN REVISION',fecha:'2026-06-03',cumpl:'APTO',riesgo:'BAJO',vigencia:'2 años',vence:'03/06/2028',gestor:'Felimón Taipe',area:'MANTENIMIENTO',servicio:'VENTA DE ARTÍCULOS ELÉCTRICOS',contacto:'DAVID HUAMAN',correo:'dhuaman@ceyesa.com.pe',correoGestor:'felimon.taipe@vetadorada.pe',monto:'10,000.00 SOLES',core:'NO CORE'},
+ {item:'96',ruc:'10208988625',razon:'REYES HUAMAN OFELIA ELIZABETH',docs:'ANULADO',fecha:'2026-01-14',cumpl:'NO APTO',riesgo:'ALTO',vigencia:'Cada contratación',vence:'—',gestor:'Luisa Bardales Mayta',area:'ADMINISTRACIÓN',servicio:'SERVICIO GENERAL',contacto:'OFELIA REYES',correo:'proveedor@correo.com',correoGestor:'luisa.bardales@vetadorada.pe',monto:'4,500.00 SOLES',core:'NO CORE'},
+ {item:'97',ruc:'10208988625',razon:'REYES HUAMAN OFELIA ELIZABETH',docs:'APROBADO',fecha:'2026-01-14',cumpl:'APTO',riesgo:'BAJO',vigencia:'2 años',vence:'14/01/2028',gestor:'Luisa Bardales Mayta',area:'ADMINISTRACIÓN',servicio:'SERVICIO GENERAL',contacto:'OFELIA REYES',correo:'proveedor@correo.com',correoGestor:'luisa.bardales@vetadorada.pe',monto:'4,500.00 SOLES',core:'NO CORE'},
+ {item:'156',ruc:'10424277105',razon:'CORREA CORTEZ OSMAR TEODORO',docs:'ANULADO',fecha:'2026-02-19',cumpl:'NO APTO',riesgo:'ALTO',vigencia:'Cada contratación',vence:'—',gestor:'Julio Contreras',area:'PLANTA',servicio:'MANTENIMIENTO',contacto:'OSMAR CORREA',correo:'ocorrea@correo.com',correoGestor:'julio.contreras@vetadorada.pe',monto:'8,200.00 SOLES',core:'CORE'},
+ {item:'162',ruc:'10424277105',razon:'CORREA CORTEZ OSMAR TEODORO',docs:'APROBADO',fecha:'2026-02-24',cumpl:'APTO',riesgo:'BAJO',vigencia:'2 años',vence:'24/02/2028',gestor:'Julio Contreras',area:'PLANTA',servicio:'MANTENIMIENTO',contacto:'OSMAR CORREA',correo:'ocorrea@correo.com',correoGestor:'julio.contreras@vetadorada.pe',monto:'8,200.00 SOLES',core:'CORE'},
+ {item:'1177',ruc:'10448288914',razon:'SERV. GENER. AUTOMOTRIZ M&D',docs:'APROBADO',fecha:'2026-03-12',cumpl:'APTO',riesgo:'BAJO',vigencia:'2 años',vence:'12/03/2028',gestor:'Carlita Sopla Tochon',area:'FLOTA',servicio:'SERVICIO AUTOMOTRIZ',contacto:'M&D',correo:'contacto@myd.com',correoGestor:'carlita.sopla@vetadorada.pe',monto:'18,000.00 SOLES',core:'NO CORE'},
+ {item:'124',ruc:'10468522239',razon:'CASTILLO ANGELES JAVIER ZACARIAS',docs:'APROBADO',fecha:'2026-01-28',cumpl:'APTO',riesgo:'BAJO',vigencia:'2 años',vence:'28/01/2028',gestor:'Felimón Taipe',area:'MANTENIMIENTO',servicio:'SERVICIO TÉCNICO',contacto:'JAVIER CASTILLO',correo:'jcastillo@correo.com',correoGestor:'felimon.taipe@vetadorada.pe',monto:'6,300.00 SOLES',core:'NO CORE'},
+ {item:'1207',ruc:'10755152698',razon:'10755152698',docs:'ANULADO',fecha:'2026-05-19',cumpl:'NO APTO',riesgo:'ALTO',vigencia:'Cada contratación',vence:'—',gestor:'Alfonso Loayza Quevedo',area:'ABASTECIMIENTO',servicio:'SUMINISTROS',contacto:'CONTACTO PROVEEDOR',correo:'proveedor@correo.com',correoGestor:'alfonso.loayza@vetadorada.pe',monto:'3,100.00 SOLES',core:'NO CORE'},
+ {item:'1222',ruc:'10776720165',razon:'SERVICIOS GENERALES EIRL',docs:'APROBADO',fecha:'2026-06-02',cumpl:'APTO',riesgo:'BAJO',vigencia:'2 años',vence:'02/06/2028',gestor:'Felimón Taipe',area:'MANTENIMIENTO',servicio:'SERVICIOS GENERALES',contacto:'CONTACTO PROVEEDOR',correo:'servicios@correo.com',correoGestor:'felimon.taipe@vetadorada.pe',monto:'12,000.00 SOLES',core:'NO CORE'},
+ {item:'128',ruc:'20100157315',razon:'CORPORACION LA SIRENA SAC',docs:'EN REVISION',fecha:'2026-01-28',cumpl:'PENDIENTE',riesgo:'MEDIO',vigencia:'Pendiente',vence:'—',gestor:'Carlita Sopla Tochon',area:'ALMACENES',servicio:'SUMINISTROS',contacto:'CONTACTO PROVEEDOR',correo:'lasirena@correo.com',correoGestor:'carlita.sopla@vetadorada.pe',monto:'9,800.00 SOLES',core:'NO CORE'}
+];
+const documents=[
+ {name:'Consentimiento para el tratamiento de datos personales',date:'2026-06-02',icon:'fa-file-signature',state:'EN REVISION'},
+ {name:'Copia del Documento de Identidad Vigente',date:'—',icon:'fa-id-card',state:'EN REVISION'},
+ {name:'Ficha RUC actualizada',date:'2026-05-18',icon:'fa-building',state:'APROBADO'},
+ {name:'Certificado literal del representante legal',date:'2026-04-24',icon:'fa-scroll',state:'APROBADO'},
+ {name:'Certificado Único Laboral',date:'—',icon:'fa-certificate',state:'EN REVISION'},
+ {name:'Declaración Jurada de Conocimiento del Proveedor',date:'2026-06-02',icon:'fa-file-contract',state:'APROBADO'},
+ {name:'Reporte Tributario a la fecha',date:'2026-06-01',icon:'fa-chart-line',state:'APROBADO'},
+ {name:'Vigencia de poder del representante legal',date:'2026-05-20',icon:'fa-gavel',state:'APROBADO'}
+];
+let currentProvider=providers[0];
+function inferServiceType(service){const s=(service||'').toUpperCase();return (s.includes('SERVICIO')||s.includes('MANTENIMIENTO')||s.includes('TECNICO'))?'SERVICIO':'BIEN'}
+function formatServiceDescription(p){const type=(p.tipoPrestacion||inferServiceType(p.servicio)).toUpperCase();const desc=(p.descripcionServicio||p.servicio||'').toUpperCase();return desc?`${type} \u00B7 ${desc}`:type}
+function todayIso(){const d=new Date();return d.toISOString().slice(0,10)}
+function getVal(id){return (document.getElementById(id)?.value||'').trim()}
+function sendInvitation(){
+  const ruc=getVal('inviteRuc');
+  const razon=getVal('inviteName');
+  const tipo=getVal('inviteTipoPrestacion').toUpperCase();
+  const desc=getVal('inviteServiceDesc').toUpperCase();
+  if(!ruc||!razon||!desc){notify('Complete RUC, nombre y descripcion del bien o servicio.');return;}
+  const moneda=getVal('inviteCurrency');
+  const monto=getVal('inviteAmount');
+  providers.unshift({item:String(Date.now()).slice(-4),ruc,razon,docs:'EN REVISION',fecha:todayIso(),cumpl:'PENDIENTE',riesgo:'MEDIO',vigencia:'Pendiente',vence:'-',gestor:getVal('inviteGestor')||'Luisa Bardales Mayta',area:getVal('inviteArea')||'ABASTECIMIENTO',tipoPrestacion:tipo,descripcionServicio:desc,servicio:desc,contacto:getVal('inviteContact')||'CONTACTO PROVEEDOR',correo:getVal('inviteEmail')||'proveedor@correo.com',correoGestor:getVal('inviteGestorEmail')||'abastecimiento@vetadorada.pe',monto:monto?(Number(monto).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+' '+(moneda||'SOLES').toUpperCase()):'Pendiente',core:getVal('inviteCore')||'NO CORE'});
+  closeModal('modalInvitar');renderRegistry();notify('Invitacion enviada');
+}
+function fmtDate(iso){const p=(iso||'').split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:iso}
+function chipClassDocs(v){return v==='APROBADO'?'chip-green':v==='ANULADO'?'chip-red':'chip-amber'}
+function chipClassCumpl(v){return v==='APTO'?'chip-green':v==='NO APTO'?'chip-red':'chip-amber'}
+function docLabel(v){return v==='EN REVISION'?'En Revisión':v==='APROBADO'?'Aprobado':v==='OBSERVADO'?'Observado':'Sin archivo'}
+function docClass(v){return v==='APROBADO'?'status-green':v==='OBSERVADO'?'status-red':v==='EN REVISION'?'status-amber':'status-gray'}
+function riskClass(v){return v==='ALTO'?'rbox-red':v==='MEDIO'?'rbox-amber':'rbox-green'}
+function conclusionClass(v){return v==='NO APTO'?'rbox-red':v==='PENDIENTE'?'rbox-amber':'rbox-green'}
+function renderRegistry(){
+  const tbody=document.getElementById('registryRows');
+  tbody.innerHTML=providers.map(p=>`<tr data-search="${(p.ruc+' '+p.razon).toLowerCase()}" data-docs="${p.docs}" data-cumpl="${p.cumpl}">
+    <td><b>${p.item}</b></td>
+    <td>${p.ruc}</td>
+    <td class="left"><b>${p.razon}</b></td>
+    <td><span class="chip ${chipClassDocs(p.docs)}">${p.docs==='EN REVISION'?'EN REVISIÓN':p.docs}</span></td>
+    <td>${fmtDate(p.fecha)}</td>
+    <td><span class="chip ${chipClassCumpl(p.cumpl)}">${p.cumpl}</span></td>
+    <td><button class="btnshow" onclick="openDetail('${p.item}')"><i class="fa-solid fa-list-check"></i> Mostrar</button></td>
+  </tr>`).join('');
+}
+function filterRows(){
+  const q=document.getElementById('searchInput').value.toLowerCase().trim();
+  const docs=document.getElementById('docsFilter').value;
+  const cumpl=document.getElementById('cumplFilter').value;
+  document.querySelectorAll('#registryRows tr').forEach(r=>{
+    const ok=(!q||r.dataset.search.includes(q))&&(!docs||r.dataset.docs===docs)&&(!cumpl||r.dataset.cumpl===cumpl);
+    r.style.display=ok?'':'none';
+  });
+}
+function renderDocuments(){
+  const wrap=document.getElementById('documentRows');
+  wrap.innerHTML=documents.map(d=>`<div class="docrow">
+    <div><div class="doct"><i class="fa-solid ${d.icon}"></i><div>${d.name}<div class="docdate">Fecha doc: ${d.date}</div></div></div></div>
+    <div class="docact">
+      <button class="round rg" onclick="previewDoc('${d.name}')" title="Ver"><i class="fa-solid fa-eye"></i></button>
+      <span class="docsel">${docLabel(d.state)}</span>
+    </div>
+  </div>`).join('');
+}
+let rucLookupTimer=null;
+function setRucStatus(message,type){
+  const el=document.getElementById('rucLookupStatus');
+  if(!el) return;
+  el.textContent=message||'';
+  el.className='ruc-hint'+(type?' '+type:'');
+}
+function setRucOk(show){
+  const ok=document.getElementById('rucLookupOk');
+  if(ok) ok.classList.toggle('show',Boolean(show));
+}
+async function lookupRuc(numero){
+  const nameInput=document.getElementById('inviteName');
+  setRucOk(false);
+  setRucStatus('Consultando...');
+  // 1. Buscar en proveedores locales (sin internet)
+  const local=providers.find(p=>p.ruc===numero);
+  if(local){nameInput.value=local.razon;setRucOk(true);setRucStatus('','ok');return;}
+  // 2. Backend /api/ruc (server.js con token de apis.net.pe)
+  try{
+    const response=await fetch('/api/ruc?numero='+encodeURIComponent(numero),{cache:'no-store'});
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok||!data.ok){setRucOk(false);setRucStatus(data.message||'RUC no encontrado.','err');return;}
+    nameInput.value=data.razonSocial||'';
+    setRucOk(Boolean(nameInput.value));
+    setRucStatus('','ok');
+  }catch(err){
+    setRucOk(false);
+    setRucStatus('No se pudo consultar el RUC.','err');
+  }
+}
+function handleRucInput(input){
+  input.value=input.value.replace(/\D/g,'').slice(0,11);
+  const nameInput=document.getElementById('inviteName');
+  clearTimeout(rucLookupTimer);
+  if(input.value.length<11){
+    if(nameInput) nameInput.value='';
+    setRucOk(false);
+    setRucStatus('');
+    return;
+  }
+  rucLookupTimer=setTimeout(()=>lookupRuc(input.value),350);
+}
+
+function openDetail(item){
+  currentProvider=providers.find(p=>p.item===item)||providers[0];
+  detailName.textContent=currentProvider.razon;
+  detailRuc.textContent=currentProvider.ruc;
+  detailDate.textContent=currentProvider.fecha;
+  detailDocsChip.textContent=currentProvider.docs==='EN REVISION'?'EN REVISIÓN':currentProvider.docs;
+  detailDocsChip.className='chip '+chipClassDocs(currentProvider.docs);
+  detailCore.textContent=currentProvider.core;
+  detailGestor.textContent=currentProvider.gestor;
+  detailArea.textContent=currentProvider.area;
+  detailService.textContent=formatServiceDescription(currentProvider);
+  detailContact.textContent=currentProvider.contacto;
+  detailMail.textContent=currentProvider.correo;
+  detailGestorMail.textContent=currentProvider.correoGestor;
+  detailAmount.textContent=currentProvider.monto;
+  riskBox.textContent=currentProvider.riesgo;
+  riskBox.className='rbox '+riskClass(currentProvider.riesgo);
+  conclusionBox.textContent=currentProvider.cumpl;
+  conclusionBox.className='rbox '+conclusionClass(currentProvider.cumpl);
+  validityBox.textContent=currentProvider.vigencia;
+  validityBox.className='rbox '+(currentProvider.vigencia==='Pendiente'?'rbox-amber':'rbox-blue');
+  expiryBox.innerHTML=`<span><i class="fa-solid fa-calendar-days" style="color:#1d4ed8"></i> ${currentProvider.vence}</span>`;
+  certRazon.textContent=currentProvider.razon;
+  certRuc.textContent='RUC N° '+currentProvider.ruc;
+  certCod.textContent='COD: DD-2026-'+String(currentProvider.item).padStart(6,'0');
+  renderDocuments();
+  document.getElementById('screenRegistry').classList.remove('active');
+  document.getElementById('screenDetail').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function backToRegistry(){
+  document.getElementById('screenDetail').classList.remove('active');
+  document.getElementById('screenRegistry').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modalbg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+function buildDocPreview(docName){const p=currentProvider||{};const lines=(count,bw)=>Array.from({length:count},(_,i)=>{const w=Math.min(bw-(i%3)*14+(i%2)*7,96);return '<div style="height:10px;background:#dde3ed;border-radius:3px;margin-bottom:9px;width:'+w+'%"></div>';}).join('');return '<div style="background:#e2e8f0;padding:18px;border-radius:10px;display:flex;justify-content:center"><div style="background:#fff;width:100%;max-width:520px;box-shadow:0 4px 24px rgba(0,0,0,.2);padding:30px 34px;font-family:Arial,sans-serif;position:relative;min-height:360px"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-28deg);font-size:46px;font-weight:900;color:rgba(37,99,235,.05);pointer-events:none;white-space:nowrap;letter-spacing:.04em">VISTA PREVIA</div><div style="display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2.5px solid #1e3a5f;padding-bottom:11px;margin-bottom:20px"><div><div style="font-size:11px;font-weight:800;color:#1e3a5f;letter-spacing:.06em">MINERA VETA DORADA S.A.C.</div><div style="font-size:9px;color:#64748b;margin-top:2px">RUC 20600059385 | Arequipa, Perú</div><div style="font-size:9px;color:#64748b">Gestión de Proveedores y Cumplimiento</div></div><div style="font-size:9px;color:#94a3b8;text-align:right;line-height:1.7"><div>REG. N° '+(p.item||'—')+'</div><div>RUC: '+(p.ruc||'—')+'</div><div>'+(p.fecha||'—')+'</div></div></div><div style="text-align:center;margin-bottom:18px"><div style="display:inline-block;background:#1e3a5f;color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:5px 14px;border-radius:4px">'+docName+'</div><div style="font-size:9px;color:#94a3b8;margin-top:7px">Presentado por: '+(p.razon||'—')+'</div></div>'+lines(4,95)+'<div style="height:1px;background:#e2e8f0;margin:13px 0"></div>'+lines(3,88)+'<div style="height:1px;background:#e2e8f0;margin:13px 0"></div>'+lines(2,80)+'<div style="margin-top:24px;display:flex;justify-content:space-between;align-items:flex-end"><div style="border-top:1px solid #334155;padding-top:7px;flex:1"><div style="font-size:9px;font-weight:700;color:#334155">'+(p.contacto||p.razon||'—')+'</div><div style="font-size:9px;color:#94a3b8">Representante / Responsable</div></div><div style="width:58px;height:58px;border:2.5px solid #2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:#2563eb;text-align:center;line-height:1.3;flex-shrink:0;margin-left:20px">RECIBIDO<br>'+(p.fecha?p.fecha.substring(0,4):'2026')+'</div></div><div style="margin-top:16px;padding-top:10px;border-top:1px dashed #cbd5e1;font-size:8px;color:#94a3b8;text-align:center">Documento presentado en el marco del proceso de homologación de proveedores · Sistema BBSS</div></div></div>';}
+function previewDoc(n){try{document.getElementById('previewDocTitle').textContent=n;document.getElementById('previewDocContent').innerHTML=buildDocPreview(n);}catch(e){}openModal('modalPreview');}
+function notify(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.style.display='block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer=setTimeout(()=>t.style.display='none',2200);
+}
+renderRegistry();
+</script>
+</body>
+</html>

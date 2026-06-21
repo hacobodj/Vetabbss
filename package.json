@@ -9,11 +9,5 @@
   "scripts": {
     "dev": "vercel dev",
     "start": "vercel dev"
-  },
-  "dependencies": {
-    "@sparticuz/chromium": "^149.0.0",
-    "playwright": "^1.61.0",
-    "playwright-core": "^1.61.0"
   }
 }
-

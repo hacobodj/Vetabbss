@@ -573,7 +573,7 @@ tbody tr{background:var(--card)}tbody tr:hover{background:var(--soft)}.left{text
         <div class="field span2"><label>Domicilio Fiscal</label><input id="dj_domfiscal" class="ctrl" placeholder="Dirección fiscal completa"></div>
         <div class="field span2"><label>Dirección Comercial</label><input id="dj_domcomercial" class="ctrl" placeholder="Dirección comercial si difiere del fiscal"></div>
         <div class="field"><label>Giro del Negocio</label><input id="dj_giro" class="ctrl" placeholder="Actividad principal"></div>
-        <div class="field"><label>CIUU SUNAT Principal</label><input id="dj_ciuu1" class="ctrl" placeholder="Código CIUU"></div>
+        <div class="field"><label>CIUU SUNAT Principal</label><input id="dj_ciuu1" class="ctrl" placeholder="Código CIUU (auto)"></div>
         <div class="field"><label>Años de Experiencia</label><input id="dj_anios" class="ctrl" type="number" min="0" placeholder="0"></div>
         <div class="field"><label>N° Trabajadores</label><input id="dj_trabajadores" class="ctrl" type="number" min="0" placeholder="0"></div>
         <div class="field"><label>Teléfonos / Celular</label><input id="dj_telefono" class="ctrl" placeholder="+51 ..."></div>
@@ -1020,6 +1020,84 @@ function applyDjRucPayload(data){
   if(domEl&&direccion) domEl.value=String(direccion).trim();
 }
 
+/* ── SUNAT: CIUU + Representante Legal en una sola consulta ── */
+let _sunatController=null;
+async function fetchCiuuSunat(numero){
+  if(_sunatController) _sunatController.abort();
+  _sunatController=new AbortController();
+
+  const ciuuEl =document.getElementById('dj_ciuu1');
+  const giroEl =document.getElementById('dj_giro');
+
+  /* Indicadores de carga */
+  if(ciuuEl){ciuuEl.placeholder='Consultando SUNAT...';ciuuEl.disabled=true;}
+
+  try{
+    const res=await fetch('/api/sunatConsult?numero='+encodeURIComponent(numero),
+      {cache:'no-store',signal:_sunatController.signal});
+    const d=await res.json().catch(()=>({}));
+
+    if(!res.ok||!d.ok) return;
+
+    /* ── CIUU y Giro del Negocio ── */
+    if(d.ciuuCodigo){
+      if(ciuuEl&&!ciuuEl.value) ciuuEl.value=d.ciuuCodigo;
+      if(giroEl&&!giroEl.value&&d.ciuuDescripcion) giroEl.value=d.ciuuDescripcion;
+    }
+
+    /* ── Representante Legal ── */
+    if(d.representanteLegal){
+      const rl=d.representanteLegal;
+
+      const tipoEl =document.getElementById('dj_rl_tipodoc');
+      const docEl  =document.getElementById('dj_rl_doc');
+      const nacEl  =document.getElementById('dj_rl_nac');
+      const nomEl  =document.getElementById('dj_rl_nombre');
+
+      /* Determinar tipo de documento:
+         SUNAT devuelve 'DNI', 'CE', 'PASAPORTE', etc.
+         El select del formulario tiene opciones: DNI | Carnet de Extranjería | Pasaporte */
+      const tipoRaw=(rl.tipoDoc||'').toUpperCase();
+      const tipoMap={DNI:'DNI',CE:'Carnet de Extranjería',CARNET:'Carnet de Extranjería',PASAPORTE:'Pasaporte'};
+      const tipoKey=Object.keys(tipoMap).find(k=>tipoRaw.includes(k))||'';
+      const tipoValue=tipoMap[tipoKey]||'';
+      if(tipoEl&&tipoValue) tipoEl.value=tipoValue;
+
+      /* N° Documento */
+      if(docEl&&rl.nroDocumento) docEl.value=rl.nroDocumento;
+
+      /* Nombre — SUNAT ya lo da; si el tipo es DNI también llamamos /api/dni
+         para obtener el nombre en formato RENIEC (más completo/normalizado).
+         Ponemos el nombre de SUNAT como placeholder inmediato. */
+      if(nomEl&&rl.nombre&&!nomEl.value) nomEl.value=rl.nombre;
+
+      /* Nacionalidad automática */
+      if(nacEl){
+        if(tipoValue==='DNI') nacEl.value='Peruana';
+        else if(tipoValue==='') nacEl.value='';
+        // Para CE/Pasaporte se deja en blanco para completar manualmente
+      }
+
+      /* Si es DNI: enriquecer nombre con endpoint RENIEC (/api/dni) */
+      if(tipoValue==='DNI'&&rl.nroDocumento&&docEl){
+        /* lookupDniUbo espera el elemento input como argumento */
+        lookupDniUbo(docEl);
+      }
+
+      const msg='RL: '+rl.cargo+' — '+rl.nombre+' ('+rl.tipoDoc+' '+rl.nroDocumento+')';
+      notify(msg);
+    }
+
+  }catch(e){
+    if(e.name!=='AbortError') console.warn('[SUNAT]',e.message);
+  }finally{
+    if(ciuuEl){
+      ciuuEl.placeholder='ej: 4711  ó  artículos de limpieza';
+      ciuuEl.disabled=false;
+    }
+  }
+}
+
 function lookupDjRuc(force=false){
   const rucEl=document.getElementById('dj_ruc');
   if(!rucEl)return;
@@ -1040,7 +1118,10 @@ function lookupDjRuc(force=false){
     try{
       const res=await fetch('/api/ruc?numero='+encodeURIComponent(numero),{cache:'no-store'});
       const data=await res.json().catch(()=>({}));
-      if(res.ok&&data.ok) applyDjRucPayload(data);
+      if(res.ok&&data.ok){
+        applyDjRucPayload(data);
+        fetchCiuuSunat(numero); // consulta CIUU a SUNAT en paralelo
+      }
     }catch(e){}
   },force?0:450);
 }
@@ -1946,6 +2027,8 @@ function startNewAndCancelPrevious(){closeModal('modalRegistroExistente');resetD
 function saveAll(){notify('Avance guardado correctamente.')}
 function sendReview(){const missing=getActiveDocs().filter(d=>d.required&&!isComplete(d));if(missing.length){notify('No se puede enviar: faltan documentos obligatorios.');selectDoc(missing[0].id);return;}docs.forEach(d=>{if(d.status==='CARGADO')d.status='EN REVISIÓN'});ensureDraftRecord().estado='EN REVISIÓN';notify('Registro enviado a revisión.');showScreen('screenProfile');renderAll()}
 function renderAll(){updateProviderProfile();renderRecords();renderDocList();renderProgress()}
+
+
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.modalbg.open').forEach(m=>m.classList.remove('open'))});
 document.addEventListener('DOMContentLoaded',()=>{
   const tl=document.getElementById('todayLabel');if(tl)tl.textContent=todayPe();
